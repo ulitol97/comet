@@ -1,6 +1,8 @@
-![comet@m](https://user-images.githubusercontent.com/35763574/159525749-830e7605-829a-4923-ab94-bd94496d24d8.png)
+<p align="center">
+  <img alt="comet logo" src="https://user-images.githubusercontent.com/35763574/162334885-228fc9fc-8e28-4b80-83e7-ace6c8fb1190.png"/>
+</p>
 
-# comet
+<br/>
 
 Comet is a [Scala](https://scala-lang.org/) application for
 validating [RDF data](https://www.w3.org/RDF/)
