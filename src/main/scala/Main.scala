@@ -78,11 +78,11 @@ object Main extends IOApp {
               itemTimeout = None)
 
             // Validator instance
-            validator = Validator(validatorConfiguration, listExtractor)
+            validator = Validator(validatorConfiguration, fileExtractor)
             // Open validation stream
             app <- validator.validate // Init
               //              .delayBy(10.minute)
-              .repeat
+              //              .repeat
               .evalTap { _ => IO.println("- Received item") }
               //              .through(toConsole) // Print validation results (see overridden toString)
               .handleErrorWith { err =>
@@ -200,9 +200,14 @@ private object Utils {
 
   // RDF Strings used for testing
   private def mkRdfItem(min: Double, max: Double): String = {
+    val temperature = Random.between(min, max)
+    mkRdfItem(temperature)
+  }
+
+  private def mkRdfItem(temperature: Double): String = {
     val dateFormatted = dateFormatter.format(new Date())
     // Format with US locale to have dots, not commas
-    val temperature = String.format(Locale.US, "%.2f", Random.between(min, max))
+    val temperatureFormatted = String.format(Locale.US, "%.2f", temperature)
 
     f"""
        |@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -210,7 +215,7 @@ private object Utils {
        |
        |ex:reading a ex:sensorReading ;
        |          ex:readingDatetime "$dateFormatted"^^xsd:dateTime ;
-       |          ex:readingTemperature "$temperature"^^xsd:decimal ;
+       |          ex:readingTemperature "$temperatureFormatted"^^xsd:decimal ;
        |		  ex:status "OK" .
        |""".stripMargin.strip
 
