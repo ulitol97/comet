@@ -38,7 +38,7 @@ sealed case class TriggerShapeMap(shapeMapText: String,
    * Attempt to create the real ShaclEx ShapeMap model or return a list with
    * the errors occurred
    *
-   * @note We reuse the shapes prefix map as the nodes prefix map, this is
+   * @note We reuse the shapes prefix map as the nodes prefix map
    */
   private lazy val shapeMap: Either[List[String], ShapeMap] =
     ShapeMap.fromString(

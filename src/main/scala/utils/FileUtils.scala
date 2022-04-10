@@ -23,7 +23,7 @@ object FileUtils {
    * @param contents List of contents (strings) to be written into files
    * @param charset  Charset used in the data written
    * @return A cats Resource for using the created files as needed and making
-   *         sure that all created files are closed after usage
+   *         sure that all created files are removed after usage
    *
    * @note Publicly exposed, to make sure people using the API manage their
    *       files as resources
