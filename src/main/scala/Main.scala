@@ -47,11 +47,11 @@ object Main extends IOApp {
         filePaths =>
           for {
             // Schema for validations
-            schema <- TestData.mkSchemaShexIO()
+            schema <- TestData.mkSchemaShaclIO()
             // Trigger for validations
-            trigger = TestData.mkTriggerShex()
+            trigger = TestData.mkTriggerShacl
             // Validator settings
-            validatorConfiguration = ValidatorConfiguration(schema, trigger, haltOnErrored = true)
+            validatorConfiguration = ValidatorConfiguration(schema, trigger, haltOnInvalid = true, haltOnErrored = true)
             // RDF extractors: all types ready to be tested
             // - List extractor
             listExtractor = ListExtractor(
@@ -78,7 +78,7 @@ object Main extends IOApp {
               itemTimeout = None)
 
             // Validator instance
-            validator = Validator(validatorConfiguration, fileExtractor)
+            validator = new Validator(validatorConfiguration, listExtractor)
             // Open validation stream
             app <- validator.validate // Init
               //              .delayBy(10.minute)

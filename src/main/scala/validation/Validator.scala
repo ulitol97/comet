@@ -48,9 +48,8 @@ import org.apache.kafka.common.KafkaException
  *                                   such cases
  *
  */
-case class Validator[A](configuration: ValidatorConfiguration,
-                        private val extractor: StreamExtractor[A]) {
-  // Shorthands for useful information
+class Validator[A](configuration: ValidatorConfiguration,
+                   private val extractor: StreamExtractor[A]) {
 
   /**
    * Schema against which this validator's data is validated
@@ -65,7 +64,7 @@ case class Validator[A](configuration: ValidatorConfiguration,
    */
   val validationTrigger: ValidationTrigger = configuration.trigger
 
-  // Expose useful extractor information
+  // Shorthands for useful information
 
   /**
    * Source from which this validator's data arrives
@@ -77,10 +76,20 @@ case class Validator[A](configuration: ValidatorConfiguration,
    */
   val dataFormat: DataFormat = extractor.format
 
+  // Expose useful extractor information
+
   /**
    * Data inference applied by this this validator
    */
   val dataInference: InferenceEngine = extractor.inference
+
+  /**
+   * Alternative constructor, automatically build the validator configuration
+   * given a schema and a trigger
+   */
+  def this(extractor: StreamExtractor[A], schema: Schema, trigger: ValidationTrigger) = {
+    this(ValidatorConfiguration(schema, trigger), extractor)
+  }
 
   /**
    * Main method of the validator, produces a Stream of validation results
@@ -197,7 +206,7 @@ case class Validator[A](configuration: ValidatorConfiguration,
 /**
  * Helper utilities for all Validators
  */
-object Validator {
+private[comet] object Validator {
 
   /**
    * Auxiliary messages emitted by the validator

@@ -88,6 +88,8 @@ object Samples {
      * @param format Format of the output RDF string
      * @param min    Minimum temperature of the item
      * @param max    Maximum temperature of the items
+     * @param valid  Whether the produced item should comply with the schemas
+     *               generated for testing or not
      * @return A String containing RDF data with the format and contents 
      *         specified by the user
      *
@@ -97,9 +99,11 @@ object Samples {
      */
     def mkRdfItem(format: DataFormat = TURTLE,
                   min: Double = minValidTemperature,
-                  max: Double = maxValidTemperature): String = {
+                  max: Double = maxValidTemperature,
+                  valid: Boolean = true): String = {
       val dateFormatted = dateFormatter.format(new Date())
-      val temperature = Random.between(min, max)
+      // Force a too low temperature to make items invalid if necessary
+      val temperature = if (valid) Random.between(min, max) else minValidTemperature - 1
       // Format with US locale to have dots, not commas
       val temperatureFormatted = String.format(Locale.US, "%.2f", temperature)
 
@@ -112,8 +116,8 @@ object Samples {
              |    xmlns:ex="http://example.org/"
              |    xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
              |  <ex:sensorReading rdf:about="http://example.org/reading">
-             |    <ex:readingDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
-             |    >$dateFormatted</ex:readingDate>
+             |    <ex:readingDateTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+             |    >$dateFormatted</ex:readingDateTime>
              |    <ex:readingTemperature rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal"
              |    >$temperatureFormatted</ex:readingTemperature>
              |    <ex:status>OK</ex:status>
@@ -126,12 +130,12 @@ object Samples {
              |{
              |  "@id" : "ex:reading",
              |  "@type" : "ex:sensorReading",
-             |  "readingDate" : "$dateFormatted",
+             |  "readingDateTime" : "$dateFormatted",
              |  "readingTemperature" : "$temperatureFormatted",
              |  "status" : "OK",
              |  "@context" : {
-             |    "readingDate" : {
-             |      "@id" : "http://example.org/readingDate",
+             |    "readingDateTime" : {
+             |      "@id" : "http://example.org/readingDateTime",
              |      "@type" : "http://www.w3.org/2001/XMLSchema#dateTime"
              |    },
              |    "readingTemperature" : {
@@ -155,7 +159,7 @@ object Samples {
              |@prefix ex:      <http://example.org/> .
              |
              |ex:reading a ex:sensorReading ;
-             |          ex:readingDatetime "$dateFormatted"^^xsd:dateTime ;
+             |          ex:readingDateTime "$dateFormatted"^^xsd:dateTime ;
              |          ex:readingTemperature "$temperatureFormatted"^^xsd:decimal ;
              |		  ex:status "OK" .
              |""".stripMargin.strip
@@ -188,7 +192,7 @@ object Samples {
               |
               |# Filters of a valid sensor reading
               |ex:ValidReading {
-              |  ex:readingDatetime     xsd:dateTime  ; # Has a VALID timestamp
+              |  ex:readingDateTime     xsd:dateTime  ; # Has a VALID timestamp
               |  ex:readingTemperature xsd:decimal MININCLUSIVE $minValidTemperature MAXINCLUSIVE $maxValidTemperature + ; # 1+ readings in range 18-20
               |  ex:status [ "OK" "RUNNING" ] # Status must be one of 
               |}
@@ -210,7 +214,7 @@ object Samples {
              |        "expressions" : [
              |          {
              |            "type" : "TripleConstraint",
-             |            "predicate" : "http://example.org/readingDate",
+             |            "predicate" : "http://example.org/readingDateTime",
              |            "valueExpr" : {
              |              "type" : "NodeConstraint",
              |              "datatype" : "http://www.w3.org/2001/XMLSchema#dateTime"
@@ -290,7 +294,7 @@ object Samples {
              |    </sh:property>
              |    <sh:property>
              |      <sh:PropertyShape>
-             |        <sh:path rdf:resource="http://example.org/readingDate"/>
+             |        <sh:path rdf:resource="http://example.org/readingDateTime"/>
              |        <sh:datatype rdf:resource="http://www.w3.org/2001/XMLSchema#dateTime"/>
              |      </sh:PropertyShape>
              |    </sh:property>
@@ -313,7 +317,7 @@ object Samples {
         case JSONLD =>
           f"""
              |{
-             |  "@graph" : [ {"
+             |  "@graph" : [ {
              |    "@id" : "_:b0",
              |    "@type" : "sh:PropertyShape",
              |    "datatype" : "xsd:decimal",
@@ -332,7 +336,7 @@ object Samples {
              |    "@id" : "_:b2",
              |    "@type" : "sh:PropertyShape",
              |    "datatype" : "xsd:dateTime",
-             |    "path" : "ex:readingDate"
+             |    "path" : "ex:readingDateTime"
              |  }, {
              |    "@id" : "ex:ValidReading",
              |    "@type" : "sh:NodeShape",
@@ -348,7 +352,7 @@ object Samples {
              |      "@id" : "http://www.w3.org/ns/shacl#maxInclusive",
              |      "@type" : "http://www.w3.org/2001/XMLSchema#decimal"
              |    },
-             |    "miSHaclEXnInclusive" : {
+             |    "minInclusive" : {
              |      "@id" : "http://www.w3.org/ns/shacl#minInclusive",
              |      "@type" : "http://www.w3.org/2001/XMLSchema#decimal"
              |    },
@@ -395,14 +399,14 @@ object Samples {
              |ex:ValidReading a sh:NodeShape ;
              |                sh:targetClass  ex:sensorReading ;
              |                sh:property [
-             |    				sh:path     ex:readingDate ;
+             |    				sh:path     ex:readingDateTime ;
              |                    sh:datatype xsd:dateTime ;
              |  				] ;
              |      			sh:property [
              |    				sh:path     ex:readingTemperature ;
              |                    sh:datatype xsd:decimal ;
-             |                    sh:minInclusive 18.00;
-             |                    sh:maxInclusive 20.00 ;
+             |                    sh:minInclusive $minValidTemperature;
+             |                    sh:maxInclusive $maxValidTemperature ;
              |                    sh:minCount 1 ; # 1+ readings
              |  				] ;
              |      			sh:property [
@@ -413,7 +417,7 @@ object Samples {
              |  				] .
              |""".stripMargin.strip
       }
-      Schemas.fromString(schemaText, format.name, Schemas.shEx.name)
+      Schemas.fromString(schemaText, format.name, Schemas.shaclex.name)
     }
   }
 
