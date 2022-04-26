@@ -1,8 +1,6 @@
 package org.ragna.comet
 package utils
 
-import TestData.shapeMapStr
-import Utils.{dateFormatter, mkRdfItem}
 import data.DataFormat
 import data.DataFormat.*
 import exception.stream.timed.StreamTimeoutException
@@ -183,7 +181,7 @@ object Samples {
      * @return A list of Strings, each one being an RDF text with a single
      *         sensor temperature reading
      */
-    def mkRdfItems(size: Int, format: DataFormat,
+    def mkRdfItems(size: Int, format: DataFormat = TURTLE,
                    min: Double = minValidTemperature,
                    max: Double = maxValidTemperature): List[String] =
       (0 until size).map(_ => mkRdfItem(format, min, max)).toList

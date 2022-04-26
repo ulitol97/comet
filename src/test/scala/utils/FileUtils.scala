@@ -1,7 +1,7 @@
 package org.ragna.comet
 package utils
 
-import stream.extractors.file.Charsets
+import stream.extractors.file.{Charsets, FileExtractor}
 
 import cats.effect.{IO, Resource}
 import fs2.io.file.*
@@ -13,6 +13,8 @@ import scala.concurrent.duration.*
 /**
  * Utilities to work with files, in the context of FS2 Streams and using
  * FS2 files API
+ *
+ * Used for testing the [[FileExtractor]]
  */
 object FileUtils {
 
@@ -25,7 +27,7 @@ object FileUtils {
    * @return A cats Resource for using the created files as needed and making
    *         sure that all created files are removed after usage
    *
-   * @note Publicly exposed, to make sure people using the API manage their
+   * @note Publicly exposed, to make sure people using the API manages their
    *       files as resources
    */
   def createFiles(

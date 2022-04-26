@@ -49,49 +49,51 @@ import org.scalatest.matchers.should.Matchers
 //noinspection RedundantDefaultArgument
 class HaltingTests extends AsyncFreeSpec with AsyncIOSpec with Matchers {
 
-  "Validation halts on INVALID" - {
-    "using ShEx schemas" in {
-      mkSingleValidationResult(
-        rdfFormat = TURTLE,
-        schemaFormat = SHEXC,
-        valid = false,
-        haltOnInvalid = true)
-        .assertThrows[StreamInvalidItemException]
+  "Validation halts" - {
+    "on INVALID results" - {
+      "using ShEx schemas" in {
+        mkSingleValidationResult(
+          rdfFormat = TURTLE,
+          schemaFormat = SHEXC,
+          valid = false,
+          haltOnInvalid = true)
+          .assertThrows[StreamInvalidItemException]
+      }
+
+      "using SHACL schemas" in {
+        mkSingleValidationResult(
+          rdfFormat = TURTLE,
+          schemaFormat = TURTLE,
+          valid = false,
+          haltOnInvalid = true)
+          .assertThrows[StreamInvalidItemException]
+      }
     }
 
-    "using SHACL schemas" in {
-      mkSingleValidationResult(
-        rdfFormat = TURTLE,
-        schemaFormat = TURTLE,
-        valid = false,
-        haltOnInvalid = true)
-        .assertThrows[StreamInvalidItemException]
-    }
-  }
+    "on ERRORED results" - {
+      "using ShEx schemas" in {
+        mkSingleValidationResult(
+          rdfItem = "This is wrong RDF data that will not validate whatsoever",
+          rdfFormat = TURTLE,
+          schemaFormat = SHEXC,
+          haltOnInvalid = false,
+          haltOnError = true,
+          None
+        )
+          .assertThrows[StreamErroredItemException]
+      }
 
-  "Validation halts on ERRORED" - {
-    "using ShEx schemas" in {
-      mkSingleValidationResult(
-        rdfItem = "This is wrong RDF data that will not validate whatsoever",
-        rdfFormat = TURTLE,
-        schemaFormat = SHEXC,
-        haltOnInvalid = false,
-        haltOnError = true,
-        None
-      )
-        .assertThrows[StreamErroredItemException]
-    }
-
-    "using SHACL schemas" in {
-      mkSingleValidationResult(
-        rdfItem = "This is wrong RDF data that will not validate whatsoever",
-        rdfFormat = TURTLE,
-        schemaFormat = TURTLE,
-        haltOnInvalid = false,
-        haltOnError = true,
-        None
-      )
-        .assertThrows[StreamErroredItemException]
+      "using SHACL schemas" in {
+        mkSingleValidationResult(
+          rdfItem = "This is wrong RDF data that will not validate whatsoever",
+          rdfFormat = TURTLE,
+          schemaFormat = TURTLE,
+          haltOnInvalid = false,
+          haltOnError = true,
+          None
+        )
+          .assertThrows[StreamErroredItemException]
+      }
     }
   }
 }
