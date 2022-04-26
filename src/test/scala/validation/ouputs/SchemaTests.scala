@@ -11,7 +11,7 @@ import stream.extractors.list.ListExtractor
 import trigger.ShapeMapFormat.*
 import trigger.TriggerModeType.{SHAPEMAP, TARGET_DECLARATIONS}
 import trigger.{ShapeMapFormat, TriggerModeType, ValidationTrigger}
-import utils.Samples
+import utils.Samples.StreamSamples.mkSingleValidationResult
 import validation.Validator
 import validation.configuration.ValidatorConfiguration
 import validation.result.ResultStatus.*
@@ -54,47 +54,6 @@ import org.scalatest.matchers.should.Matchers
  */
 //noinspection RedundantDefaultArgument
 class SchemaTests extends AsyncFreeSpec with AsyncIOSpec with Matchers {
-
-  /**
-   * Shortcut for generating single-item results through comet's stream validators,
-   * which is the main logic required for these tests
-   *
-   * Given the details of the validation (input data/schema format, wanted result...)
-   * this creates a validation stream that complies with it and gets its eventual
-   * result back
-   *
-   * @param rdfFormat    Format of the RDF item that we want to get through validation
-   * @param schemaFormat Format of the Schema to be used for validation
-   * @param valid        Whether if the produced RDF item should throw a VALID validation
-   *                     result or not
-   * @return The [[ValidationResult]] of getting an RDF item (of format [[rdfFormat]])
-   *         through a validator using a Schema (of format/engine [[schemaFormat]])
-   *         following the data and schema templates in [[Samples]]
-   */
-  private def mkSingleValidationResult(rdfFormat: DataFormat,
-                                       schemaFormat: DataFormat | ShExSchemaFormat,
-                                       valid: Boolean = true): IO[ValidationResult] = {
-    for {
-      // Make the schema
-      schema <- schemaFormat match {
-        case df: DataFormat => Samples.SchemaSamples.mkSchemaShaclIO(df)
-        case sf: ShExSchemaFormat => Samples.SchemaSamples.mkSchemaShExIO(sf)
-      }
-      // Make the validation trigger (inferred from schema type)
-      trigger = schemaFormat match {
-        case _: DataFormat => Samples.TriggerSamples.mkTriggerShacl
-        case _: ShExSchemaFormat => Samples.TriggerSamples.mkTriggerShex(COMPACT)
-      }
-      // Make the RDF item and get it into a list extractor
-      rdfItem = Samples.RdfSamples.mkRdfItem(rdfFormat, valid = valid)
-      extractor = ListExtractor(items = List(rdfItem), format = rdfFormat)
-
-      // Open validation stream and collect the validation results
-      validator = Validator(extractor, schema, trigger)
-      results: List[ValidationResult] <- validator.validate.compile.toList
-      _ <- if (!valid) IO.println(results.head) else IO.unit
-    } yield results.head
-  }
 
   "ShEx schemas" - {
     "using ShExC syntax" - {

@@ -5,11 +5,16 @@ import TestData.shapeMapStr
 import Utils.{dateFormatter, mkRdfItem}
 import data.DataFormat
 import data.DataFormat.*
+import implicits.RDFElementImplicits.rdfFromString
 import schema.ShExSchemaFormat
 import schema.ShExSchemaFormat.{SHEXC, SHEXJ}
+import stream.extractors.list.ListExtractor
 import trigger.ShapeMapFormat.{COMPACT, JSON}
 import trigger.{ShapeMapFormat, TriggerShapeMap, TriggerTargetDeclarations, ValidationTrigger}
 import utils.Samples.RdfSamples.dateFormatter
+import validation.Validator
+import validation.configuration.ValidatorConfiguration
+import validation.result.ValidationResult
 
 import cats.effect.IO
 import es.weso.schema.{Schema, Schemas}
@@ -52,6 +57,94 @@ object Samples {
    * This value is used to create restrictions when generating schemas
    */
   private val maxValidTemperature: Double = 20.00
+
+  /**
+   * Utils to create validation streams for testing
+   */
+  object StreamSamples {
+    /**
+     * Similar to the alternative implementation of [[mkSingleValidationResult]],
+     * but here the RDF string is not passed manually but created from a template
+     * given its desired format
+     *
+     * @param rdfFormat     Format of the RDF item that we want to get validated,
+     *                      generated from template (see [[RdfSamples]])
+     * @param schemaFormat  Format of the Schema to be used for validation,
+     *                      generated from template (see [[SchemaSamples]])
+     * @param valid         Whether if the produced RDF item should comply with
+     *                      the produced validation schema or not
+     *                      Used to control de output status of the validation
+     * @param haltOnInvalid Whether if the underlying validator should halt on
+     *                      INVALID validation results
+     * @param haltOnError   Whether if the underlying validator should halt on
+     *                      ERRORED validation results
+     * @return The [[ValidationResult]] of getting an RDF item (of format [[rdfFormat]])
+     *         through a validator using a Schema (of format/engine [[schemaFormat]])
+     *         following the data, schema and trigger templates in [[Samples]]
+     */
+    def mkSingleValidationResult(rdfFormat: DataFormat,
+                                 schemaFormat: DataFormat | ShExSchemaFormat,
+                                 valid: Boolean = true,
+                                 haltOnInvalid: Boolean = false,
+                                 haltOnError: Boolean = false
+                                ): IO[ValidationResult] = {
+      // Make the RDF item
+      val rdfItem = RdfSamples.mkRdfItem(rdfFormat, valid = valid)
+      // Resort to alternative implementation
+      mkSingleValidationResult(rdfItem, rdfFormat, schemaFormat, haltOnInvalid, haltOnError)
+    }
+
+    /**
+     * Shortcut for generating single-item results through comet's stream validators,
+     * which is the main logic required for these tests
+     *
+     * Given the details of the validation (input data/schema format, wanted result...)
+     * this creates a validation stream that complies with it and gets its eventual
+     * result back
+     *
+     * @param rdfItem       Custom string of RDF data provided for validation
+     * @param rdfFormat     Format of the RDF string provided for validation
+     * @param schemaFormat  Format of the Schema to be used for validation,
+     *                      generated from template (see [[SchemaSamples]])
+     * @param haltOnInvalid Whether if the underlying validator should halt on
+     *                      INVALID validation results
+     * @param haltOnError   Whether if the underlying validator should halt on
+     *                      ERRORED validation results
+     * @return The [[ValidationResult]] of getting a custom RDF string, expected
+     *         to have format [[rdfFormat]],
+     *         through a validator using a Schema (of format/engine [[schemaFormat]])
+     *         following the schema and trigger templates in [[Samples]]
+     */
+    def mkSingleValidationResult(rdfItem: String,
+                                 rdfFormat: DataFormat,
+                                 schemaFormat: DataFormat | ShExSchemaFormat,
+                                 haltOnInvalid: Boolean,
+                                 haltOnError: Boolean
+                                ): IO[ValidationResult] = {
+      for {
+        // Make the schema
+        schema <- schemaFormat match {
+          case df: DataFormat => SchemaSamples.mkSchemaShaclIO(df)
+          case sf: ShExSchemaFormat => SchemaSamples.mkSchemaShExIO(sf)
+        }
+        // Make the validation trigger (inferred from schema type)
+        trigger = schemaFormat match {
+          case _: DataFormat => TriggerSamples.mkTriggerShacl
+          case _: ShExSchemaFormat => TriggerSamples.mkTriggerShex(COMPACT)
+        }
+        // Get the RDF item into a list extractor
+        extractor = ListExtractor(items = List(rdfItem), format = rdfFormat)
+
+        // Open validation stream and collect the validation results
+        // Validator settings
+        validatorConfiguration = ValidatorConfiguration(schema, trigger,
+          haltOnInvalid = haltOnInvalid, haltOnErrored = haltOnError)
+        validator = Validator(validatorConfiguration, extractor)
+        results: List[ValidationResult] <- validator.validate.compile.toList
+      } yield results.head
+    }
+
+  }
 
   /**
    * Utils to create RDF data Strings for testing
