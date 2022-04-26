@@ -4,6 +4,7 @@ package utils
 import stream.extractors.file.{Charsets, FileExtractor}
 
 import cats.effect.{IO, Resource}
+import com.typesafe.scalalogging.LazyLogging
 import fs2.io.file.*
 import fs2.{Stream, text}
 
@@ -16,7 +17,7 @@ import scala.concurrent.duration.*
  *
  * Used for testing the [[FileExtractor]]
  */
-object FileUtils {
+object FileUtils extends LazyLogging {
 
   /**
    * From a list of texts, write each of them into a separate temporary file
@@ -36,14 +37,19 @@ object FileUtils {
                  ): Resource[IO, List[Path]] = {
     Resource.make {
       // Acquire list of files
-      IO.println(s"Creating ${contents.length} files")
-        >> createFilesFromContents(contents, charset)
+      IO {
+        logger.info(s"Creating ${contents.length} temporary files")
+      } >> createFilesFromContents(contents, charset)
     } { (filePaths: List[Path]) =>
       // Release list of files: for each file remove it and print a message
       // Compose an IO in charge of removing all files, which is the final one
       filePaths.foldLeft(IO.unit) { (curr, file) =>
-        curr >> (Files[IO].deleteIfExists(file) >> IO.println(s"Removed file $file"))
-      } >> IO.println("Removed all files in resource")
+        curr >> (Files[IO].deleteIfExists(file) >> IO {
+          logger.debug(s"Removed file $file")
+        })
+      } >> IO {
+        logger.info("Removed all files in resource")
+      }
     }
   }
 
@@ -101,7 +107,9 @@ object FileUtils {
     val fileFlags = if (!append) Flags.Write else Flags.Append
 
     // Debug message
-    IO.println(s"Writing file into $file") >>
+    IO {
+      logger.debug(s"Writing $content into $file")
+    } >>
       // Start single item stream
       Stream.eval(IO.pure(content))
         // Encode string before writing

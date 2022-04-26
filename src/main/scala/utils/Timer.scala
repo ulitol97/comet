@@ -2,6 +2,7 @@ package org.ragna.comet
 package utils
 
 import cats.effect.{FiberIO, IO, Temporal}
+import com.typesafe.scalalogging.LazyLogging
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.*
@@ -16,18 +17,18 @@ import scala.concurrent.duration.*
  * @param delay  Wait before executing the action
  * @tparam A Return type of the scheduled action
  */
-final case class Timer[A](action: IO[A], delay: FiniteDuration) {
-  /**
-   * Fiber running the timer action, a reference to this fiber is kept so that
-   * it can be cancelled when the timer is reset
-   */
-  private var actionFiber: Option[FiberIO[A]] = None
-
+final case class Timer[A](action: IO[A], delay: FiniteDuration) extends LazyLogging {
   /**
    * The action to be executed by [[actionFiber]], consisting of waiting for
    * [[delay]] and then running the [[action]]
    */
   private val delayedAction: IO[A] = Temporal[IO].sleep(delay) *> action
+
+  /**
+   * Fiber running the timer action, a reference to this fiber is kept so that
+   * it can be cancelled when the timer is reset
+   */
+  private var actionFiber: Option[FiberIO[A]] = None
 
   /**
    * Start the countdown on this timer, or reset it in case it's already running
@@ -41,10 +42,12 @@ final case class Timer[A](action: IO[A], delay: FiniteDuration) {
       fiber <- delayedAction.onCancel(
         IO {
           val endTime = (System.currentTimeMillis() - startTime) / 1000f
-          println(s"Timer timeout canceled after: ${endTime}s")
+          logger.debug(s"Timer timeout canceled after: ${endTime}s")
         }).start
       _ = actionFiber = Some(fiber)
-      _ <- IO.println(s"SCHEDULED: ${actionFiber.get}")
+      _ <- IO {
+        logger.debug(s"Timer scheduled on fiber: ${actionFiber.get}")
+      }
     } yield ()
   }
 
@@ -57,7 +60,9 @@ final case class Timer[A](action: IO[A], delay: FiniteDuration) {
       for {
         _ <- fiber.cancel
         _ <- fiber.join
-        _ <- IO.println(s"CANCELLED: $fiber")
+        _ <- IO {
+          logger.debug(s"Timer cancelled on fiber: $fiber")
+        }
       } yield ()
     } else IO.unit
   }

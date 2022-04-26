@@ -7,6 +7,7 @@ import cats.effect.*
 import cats.effect.unsafe.implicits.global
 import cats.instances.list.*
 import cats.syntax.all.*
+import com.typesafe.scalalogging.LazyLogging
 import fs2.{Pipe, Stream}
 
 import scala.concurrent.duration.*
@@ -63,7 +64,7 @@ package object utils {
    * @param stream Stream being operated on
    * @tparam O Type of the items contained in the stream
    */
-  implicit class Fs2StreamOps[O](stream: Stream[IO, O]) {
+  implicit class Fs2StreamOps[O](stream: Stream[IO, O]) extends LazyLogging {
 
     /**
      * Configure this stream to fail if not fed for a certain duration
@@ -95,7 +96,9 @@ package object utils {
       // Create and start timer
       val finalStream = for {
         // Debug message
-        _ <- IO.println(s"Setting timed stream to $timeout")
+        _ <- IO {
+          logger.info(s"Setting timed stream to $timeout")
+        }
         // Deferred to be filled to stop execution
         cancelSignal <- Deferred[IO, Either[Throwable, Unit]]
         // Code chunk filling the cancellation signal with the halting reason (timeout)

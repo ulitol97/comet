@@ -18,7 +18,9 @@ lazy val comet = (project in file("."))
       wesoUtils,
       // testing
       scalaTest,
-      catsEffectTesting
+      catsEffectTesting,
+      // logging
+      scalaLogging
     ),
     buildInfoSettings,
     // https://stackoverflow.com/q/66372308/9744696
@@ -60,6 +62,8 @@ lazy val wesoUtilsVersion = "0.2.4"
 // Testing dependencies
 lazy val scalaTestVersion = "3.2.11" // Usual testing
 lazy val catsEffectTestingVersion = "1.4.0" // Integration of ScalaTest with cats-effect
+// Other
+lazy val scalaLoggingVersion = "3.9.4"
 
 // -------------------------------------------------------------------------- //
 
@@ -74,4 +78,8 @@ lazy val shaclex = "es.weso" %% "shaclex" % shaclexVersion
 lazy val wesoUtils = "es.weso" %% "utilstest" % wesoUtilsVersion
 // Testing dependencies
 lazy val scalaTest = "org.scalatest" %% "scalatest" % scalaTestVersion % Test
-lazy val catsEffectTesting = "org.typelevel" %% "cats-effect-testing-scalatest" % catsEffectTestingVersion % Test
+lazy val catsEffectTesting =
+  "org.typelevel" %% "cats-effect-testing-scalatest" % catsEffectTestingVersion % Test
+// Other
+lazy val scalaLogging =
+  "com.typesafe.scala-logging" %% "scala-logging" % scalaLoggingVersion

@@ -1,15 +1,15 @@
 package org.ragna.comet
 
-import cats.effect.{IO, IOApp, ExitCode}
+import cats.effect.{ExitCode, IO, IOApp}
+import com.typesafe.scalalogging.LazyLogging
 
 /**
- * Demo entry point.
- * Shall initialize the validation, get the validation Stream
- * and print it
- *
+ * Dummy entry point
  */
-object Main extends IOApp {
+object Main extends IOApp with LazyLogging {
 
-  override def run(args: List[String]): IO[ExitCode] =
+  override def run(args: List[String]): IO[ExitCode] = {
+    logger.debug("Launching comet")
     IO.pure(ExitCode.Success)
+  }
 }

@@ -18,6 +18,7 @@ import cats.effect.unsafe.implicits.global
 import cats.effect.{Deferred, IO, Resource}
 import cats.implicits.*
 import cats.syntax.all.*
+import com.typesafe.scalalogging.LazyLogging
 import es.weso.rdf.InferenceEngine
 import es.weso.rdf.jena.RDFAsJenaModel
 import es.weso.schema.{Schema, ShapeMapTrigger, Result as ValidationReport, ValidationTrigger as ValidationTriggerShaclex}
@@ -49,7 +50,7 @@ import org.apache.kafka.common.KafkaException
  *
  */
 class Validator[A](configuration: ValidatorConfiguration,
-                   private val extractor: StreamExtractor[A]) {
+                   private val extractor: StreamExtractor[A]) extends LazyLogging {
 
   /**
    * Schema against which this validator's data is validated
@@ -115,7 +116,11 @@ class Validator[A](configuration: ValidatorConfiguration,
     extractor.dataStream // Initial data stream
       .through(validateItems) // Transform to validations
       .through(createResults) // Transform to results
-  //      .onFinalize(IO.println(streamFinalized)) // Logger info message when done
+      .onFinalize(
+        IO {
+          logger.info(streamFinalized)
+        }
+      ) // Logger info message when done
 
   /**
    * Stream transformation pipe in charge of validating RDF items and
