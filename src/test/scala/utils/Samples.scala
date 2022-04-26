@@ -5,6 +5,7 @@ import TestData.shapeMapStr
 import Utils.{dateFormatter, mkRdfItem}
 import data.DataFormat
 import data.DataFormat.*
+import exception.stream.timed.StreamTimeoutException
 import implicits.RDFElementImplicits.rdfFromString
 import schema.ShExSchemaFormat
 import schema.ShExSchemaFormat.{SHEXC, SHEXJ}
@@ -21,6 +22,7 @@ import es.weso.schema.{Schema, Schemas}
 
 import java.text.SimpleDateFormat
 import java.util.{Date, Locale}
+import scala.concurrent.duration.FiniteDuration
 import scala.util.Random
 
 /**
@@ -67,17 +69,20 @@ object Samples {
      * but here the RDF string is not passed manually but created from a template
      * given its desired format
      *
-     * @param rdfFormat     Format of the RDF item that we want to get validated,
-     *                      generated from template (see [[RdfSamples]])
-     * @param schemaFormat  Format of the Schema to be used for validation,
-     *                      generated from template (see [[SchemaSamples]])
-     * @param valid         Whether if the produced RDF item should comply with
-     *                      the produced validation schema or not
-     *                      Used to control de output status of the validation
-     * @param haltOnInvalid Whether if the underlying validator should halt on
-     *                      INVALID validation results
-     * @param haltOnError   Whether if the underlying validator should halt on
-     *                      ERRORED validation results
+     * @param rdfFormat        Format of the RDF item that we want to get validated,
+     *                         generated from template (see [[RdfSamples]])
+     * @param schemaFormat     Format of the Schema to be used for validation,
+     *                         generated from template (see [[SchemaSamples]])
+     * @param valid            Whether if the produced RDF item should comply with
+     *                         the produced validation schema or not
+     *                         Used to control de output status of the validation
+     * @param haltOnInvalid    Whether if the underlying validator should halt on
+     *                         INVALID validation results
+     * @param haltOnError      Whether if the underlying validator should halt on
+     *                         ERRORED validation results
+     * @param extractorTimeout Time for the item extractor to wait without 
+     *                         receiving items before erroring and closing
+     *                         the stream (see [[StreamTimeoutException]])
      * @return The [[ValidationResult]] of getting an RDF item (of format [[rdfFormat]])
      *         through a validator using a Schema (of format/engine [[schemaFormat]])
      *         following the data, schema and trigger templates in [[Samples]]
@@ -86,12 +91,15 @@ object Samples {
                                  schemaFormat: DataFormat | ShExSchemaFormat,
                                  valid: Boolean = true,
                                  haltOnInvalid: Boolean = false,
-                                 haltOnError: Boolean = false
+                                 haltOnError: Boolean = false,
+                                 extractorTimeout: Option[FiniteDuration] = None
                                 ): IO[ValidationResult] = {
       // Make the RDF item
       val rdfItem = RdfSamples.mkRdfItem(rdfFormat, valid = valid)
       // Resort to alternative implementation
-      mkSingleValidationResult(rdfItem, rdfFormat, schemaFormat, haltOnInvalid, haltOnError)
+      mkSingleValidationResult(
+        rdfItem, rdfFormat, schemaFormat, haltOnInvalid, haltOnError, extractorTimeout
+      )
     }
 
     /**
@@ -102,24 +110,31 @@ object Samples {
      * this creates a validation stream that complies with it and gets its eventual
      * result back
      *
-     * @param rdfItem       Custom string of RDF data provided for validation
-     * @param rdfFormat     Format of the RDF string provided for validation
-     * @param schemaFormat  Format of the Schema to be used for validation,
-     *                      generated from template (see [[SchemaSamples]])
-     * @param haltOnInvalid Whether if the underlying validator should halt on
-     *                      INVALID validation results
-     * @param haltOnError   Whether if the underlying validator should halt on
-     *                      ERRORED validation results
+     * @param rdfItem          Custom string of RDF data provided for validation
+     * @param rdfFormat        Format of the RDF string provided for validation
+     * @param schemaFormat     Format of the Schema to be used for validation,
+     *                         generated from template (see [[SchemaSamples]])
+     * @param haltOnInvalid    Whether if the underlying validator should halt on
+     *                         INVALID validation results
+     * @param haltOnError      Whether if the underlying validator should halt on
+     *                         ERRORED validation results
+     * @param extractorTimeout Time for the item extractor to wait without 
+     *                         receiving items before erroring and closing
+     *                         the stream (see [[StreamTimeoutException]])
      * @return The [[ValidationResult]] of getting a custom RDF string, expected
      *         to have format [[rdfFormat]],
      *         through a validator using a Schema (of format/engine [[schemaFormat]])
      *         following the schema and trigger templates in [[Samples]]
+     *
+     * @note The List extractor is used for testing, since it is the simplest
+     *       and cheapest way we have to test in-memory data
      */
     def mkSingleValidationResult(rdfItem: String,
                                  rdfFormat: DataFormat,
                                  schemaFormat: DataFormat | ShExSchemaFormat,
                                  haltOnInvalid: Boolean,
-                                 haltOnError: Boolean
+                                 haltOnError: Boolean,
+                                 extractorTimeout: Option[FiniteDuration]
                                 ): IO[ValidationResult] = {
       for {
         // Make the schema
@@ -133,7 +148,8 @@ object Samples {
           case _: ShExSchemaFormat => TriggerSamples.mkTriggerShex(COMPACT)
         }
         // Get the RDF item into a list extractor
-        extractor = ListExtractor(items = List(rdfItem), format = rdfFormat)
+        extractor = ListExtractor(items = List(rdfItem), format = rdfFormat,
+          itemTimeout = extractorTimeout)
 
         // Open validation stream and collect the validation results
         // Validator settings

@@ -32,12 +32,6 @@ import org.scalatest.matchers.should.Matchers
  * - The same RDF data example will be validated against a given schema,
  * though slightly modified to test both valid and invalid validations
  *
- * - Single RDF items will be tested as a single item stream
- * fed to a stream-validator to check that the results are the expected ones
- *
- * - The List extractor will be used for testing, since it is the simplest way
- * we have to test in-memory data
- *
  * Tests are nested as follows to cover all possibilities:
  *
  * - Per Schema type/engine (ShEx, SHACL, etc.)

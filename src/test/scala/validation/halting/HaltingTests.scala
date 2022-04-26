@@ -34,12 +34,6 @@ import org.scalatest.matchers.should.Matchers
  * - The same RDF data example will be validated against a given schema,
  * though slightly modified to test both invalid and erroring validations
  *
- * - Single RDF items will be tested as a single item stream
- * fed to a stream-validator to check that the results are the expected ones
- *
- * - The List extractor will be used for testing, since it is the simplest way
- * we have to test in-memory data
- *
  * Tests are nested as follows to cover all possibilities:
  *
  * - Per expected behaviour (halt on invalid, halt on errored)
@@ -82,7 +76,9 @@ class HaltingTests extends AsyncFreeSpec with AsyncIOSpec with Matchers {
         rdfFormat = TURTLE,
         schemaFormat = SHEXC,
         haltOnInvalid = false,
-        haltOnError = true)
+        haltOnError = true,
+        None
+      )
         .assertThrows[StreamErroredItemException]
     }
 
@@ -92,7 +88,9 @@ class HaltingTests extends AsyncFreeSpec with AsyncIOSpec with Matchers {
         rdfFormat = TURTLE,
         schemaFormat = TURTLE,
         haltOnInvalid = false,
-        haltOnError = true)
+        haltOnError = true,
+        None
+      )
         .assertThrows[StreamErroredItemException]
     }
   }
