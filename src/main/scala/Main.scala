@@ -18,9 +18,6 @@ import validation.configuration.ValidatorConfiguration
 
 import cats.effect.*
 import cats.syntax.functor.*
-import es.weso.rdf.PrefixMap
-import es.weso.rdf.jena.RDFAsJenaModel
-import es.weso.schema.{Schema, Schemas, ShapeMapTrigger, ValidationTrigger as ValidationTriggerShaclex}
 import fs2.io.file.*
 import fs2.{Pipe, Stream}
 

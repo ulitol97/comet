@@ -3,11 +3,13 @@ package extraction
 
 import data.DataFormat
 import data.DataFormat.*
+import exception.stream.timed.StreamTimeoutException
 import implicits.RDFElementImplicits.rdfFromString
 import schema.ShExSchemaFormat
 import schema.ShExSchemaFormat.*
 import stream.extractors.StreamExtractor
 import stream.extractors.file.FileExtractor
+import stream.extractors.kafka.{KafkaExtractor, KafkaExtractorConfiguration}
 import stream.extractors.list.ListExtractor
 import trigger.ShapeMapFormat.*
 import trigger.TriggerModeType.{SHAPEMAP, TARGET_DECLARATIONS}
@@ -24,6 +26,9 @@ import cats.effect.testing.scalatest.AsyncIOSpec
 import es.weso.schema.Schema
 import org.scalatest.freespec.AsyncFreeSpec
 import org.scalatest.matchers.should.Matchers
+
+import scala.concurrent.duration.*
+import scala.language.postfixOps
 
 /**
  * Test suite checking that the available basic data extractors work
@@ -47,7 +52,8 @@ import org.scalatest.matchers.should.Matchers
  * @note In these tests we take for granted the functioning of the validator
  *       and we are just interested in the extractors
  * @note For obvious reasons, the Kafka Extractor can't be tested in a unit test
- *       and the Kafka extractor is therefore mocked with dummy data
+ *       (expect integration tests) and the Kafka extractor is therefore
+ *       expected to timeout and fail
  */
 //noinspection RedundantDefaultArgument
 class ExtractorTests extends AsyncFreeSpec with AsyncIOSpec with Matchers {
@@ -120,8 +126,40 @@ class ExtractorTests extends AsyncFreeSpec with AsyncIOSpec with Matchers {
   }
 
   "KAFKA extractor" - {
+    // Trivial example with a Kafka extractor
+    // Expected to timeout in the absence of a local Stream
     "works" in {
-      IO(1).asserting(_ shouldBe 1)
+      val validationResult: IO[Either[Throwable, ValidationResult]] =
+        for {
+          // Data, schema, trigger
+          schema <- Samples.SchemaSamples.mkSchemaShExIO()
+          trigger = Samples.TriggerSamples.mkTriggerShex()
+
+          // Kafka extractor
+          extractorConfiguration = KafkaExtractorConfiguration("topic")
+          extractor = KafkaExtractor[Unit, String](
+            extractorConfiguration,
+            TURTLE,
+            itemTimeout = Some(1 second)
+          )
+
+          // Validator init
+          validatorConfiguration = ValidatorConfiguration(schema, trigger)
+          validator = new Validator(validatorConfiguration, extractor)
+
+          results: List[Either[Throwable, ValidationResult]] <- validator.validate
+            .attempt
+            .compile
+            .toList
+        } yield results.head
+
+      // Result is an error and of type StreamTimeoutException
+      validationResult.asserting(results => {
+        results.isLeft shouldBe true
+
+        results.swap.toOption.get.isInstanceOf[StreamTimeoutException]
+          .shouldBe(true)
+      })
     }
   }
 }

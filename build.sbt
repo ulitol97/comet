@@ -18,7 +18,6 @@ lazy val comet = (project in file("."))
       wesoUtils,
       // testing
       scalaTest,
-      scalaTestPlus,
       catsEffectTesting
     ),
     buildInfoSettings,
@@ -51,18 +50,19 @@ lazy val buildInfoSettings = Seq(
 // Core dependencies
 lazy val catsVersion = "3.3.11"
 // FS2 dependencies
-lazy val fs2Version = "3.2.5"
+lazy val fs2Version = "3.2.7"
 lazy val fs2KafkaVersion = "3.0.0-M6"
 // WESO dependencies
 lazy val shaclexVersion = "0.2.2"
 lazy val shexsVersion = "0.2.2"
-lazy val umlShaclZexVersion = "0.0.82"
+lazy val umlShaclexVersion = "0.0.82"
 lazy val wesoUtilsVersion = "0.2.4"
 // Testing dependencies
 lazy val scalaTestVersion = "3.2.11" // Usual testing
-lazy val scalaTestPlusVersion = "3.2.11.0" // Integration of ScalaTest with ScalaCheck
 lazy val catsEffectTestingVersion = "1.4.0" // Integration of ScalaTest with cats-effect
+
 // -------------------------------------------------------------------------- //
+
 // Core dependencies
 lazy val catsEffect = "org.typelevel" %% "cats-effect" % catsVersion
 // FS2 dependencies
@@ -74,5 +74,4 @@ lazy val shaclex = "es.weso" %% "shaclex" % shaclexVersion
 lazy val wesoUtils = "es.weso" %% "utilstest" % wesoUtilsVersion
 // Testing dependencies
 lazy val scalaTest = "org.scalatest" %% "scalatest" % scalaTestVersion % Test
-lazy val scalaTestPlus = "org.scalatestplus" %% "scalacheck-1-15" % scalaTestPlusVersion % Test
 lazy val catsEffectTesting = "org.typelevel" %% "cats-effect-testing-scalatest" % catsEffectTestingVersion % Test
