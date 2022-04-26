@@ -1,6 +1,7 @@
-<p align="center">
+<!--suppress HtmlDeprecatedAttribute -->
+<div align="center">
   <img alt="comet logo" src="https://user-images.githubusercontent.com/35763574/162334885-228fc9fc-8e28-4b80-83e7-ace6c8fb1190.png"/>
-</p>
+</div>
 
 <br/>
 

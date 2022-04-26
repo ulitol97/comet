@@ -191,6 +191,7 @@ private[stream] object StreamExtractor {
      * @return String containing the specific error ([[message]])
      *         preceded by [[extractorCreationErrorPrefix]]
      */
+    //noinspection DuplicatedCode
     def mkExtractorCreationError(message: Option[String]): String = {
       val attachedMessage = message.map(msg => s": $msg").getOrElse("")
       s"$extractorCreationErrorPrefix$attachedMessage"

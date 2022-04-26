@@ -95,6 +95,7 @@ object ValidatorConfiguration {
      * @return String containing the specific error ([[message]])
      *         preceded by [[configurationCreationErrorPrefix]]
      */
+    //noinspection DuplicatedCode
     def mkConfigurationCreationError(message: Option[String]): String = {
       val attachedMessage = message.map(msg => s": $msg").getOrElse("")
       s"$configurationCreationErrorPrefix$attachedMessage"

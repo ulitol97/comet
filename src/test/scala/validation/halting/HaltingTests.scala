@@ -41,7 +41,7 @@ import org.scalatest.matchers.should.Matchers
  *
  * @note We understand as invalid validations those whose result is INVALID,
  *       whereas errored validations are those who cannot be completed due to
- *       an error in the validation process (nomally due to bad data/schema
+ *       an error in the validation process (normally due to bad data/schema
  *       syntax)
  * @note Standard behaviour (not halting on VALID items) is not tested here
  *       since it is already exhaustively tested in [[SchemaTests]]

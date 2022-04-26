@@ -158,7 +158,7 @@ class Validator[A](configuration: ValidatorConfiguration,
                     // Could not create validation trigger, error result
                     case Left(errorList) =>
                       IO.pure(ValidationReport.errStr(
-                        s"""${invalidValidationTrigger}: 
+                        s"""$invalidValidationTrigger: 
                            |${errorList.mkString(", ")}
                            |""".stripMargin.strip()))
                     // Validation trigger is OK, attempt validation
