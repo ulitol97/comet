@@ -1,14 +1,21 @@
+/* ------------------------------------------------------------------------- */
+/* BASIC PROPERTIES */
 // See version in "version.sbt"
 Global / name := "comet" // Friendly app name
-ThisBuild / scalaVersion := "3.1.1"
+ThisBuild / scalaVersion := "3.1.2"
 Global / excludeLintKeys ++= Set(name, idePackagePrefix)
 
+/* ------------------------------------------------------------------------- */
+/* MODULES */
 lazy val comet = (project in file("."))
   .enablePlugins(BuildInfoPlugin)
   .settings(
     name := "comet",
     idePackagePrefix := Some("org.ragna.comet"),
+    Compile / run / fork := true, // https://stackoverflow.com/q/66372308/9744696
     resolverSettings,
+    testFrameworks += ScalaTestFramework,
+    buildInfoSettings,
     libraryDependencies ++= Seq(
       catsEffect,
       fs2,
@@ -21,22 +28,23 @@ lazy val comet = (project in file("."))
       catsEffectTesting,
       // logging
       scalaLogging
-    ),
-    buildInfoSettings,
-    // https://stackoverflow.com/q/66372308/9744696
-    Compile / run / fork := true
+    )
   )
 
-// Aggregate resolver settings passed down to modules to resolve dependencies
-// Helper to resolve dependencies from GitHub packages
+/* ------------------------------------------------------------------------- */
+/* RESOLVER SETTINGS */
+// Settings passed down to modules to resolve dependencies
 lazy val resolverSettings = Seq(
   resolvers ++= Seq(
-    Resolver.DefaultMavenRepository,
-    Resolver.sonatypeRepo("snapshots")
+    Resolver.DefaultMavenRepository, // maven
+    Resolver.sonatypeRepo("snapshots") // sonatype
   )
 )
 
+/* ------------------------------------------------------------------------- */
+/* BUILD INFO */
 // Shared settings for the BuildInfo Plugin
+// Allows access to apps metadata in runtime code
 // See https://github.com/sbt/sbt-buildinfo
 lazy val buildInfoSettings = Seq(
   buildInfoKeys := Seq[BuildInfoKey](
@@ -49,11 +57,38 @@ lazy val buildInfoSettings = Seq(
   buildInfoObject := "BuildInfo"
 )
 
+/* ------------------------------------------------------------------------- */
+/* SBT GITHUB ACTIONS */
+// GitHub Actions for build/test and clean are automatically generated
+// The settings of these actions are configured here:
+//  - Scala versions used: scala 3 (scala 2 won't compile Scala 3 code)
+//  - Java versions used: LST 11, LTS 17
+//  - etc.
+// See https://github.com/djspiewak/sbt-github-actions
+lazy val scala3 = "3.1.2"
+lazy val ciScalaVersions = List(scala3)
+
+lazy val java11 = JavaSpec.temurin("11")
+lazy val java17 = JavaSpec.temurin("17")
+lazy val ciJavaVersions = List(java11, java17)
+
+// Specify which versions to be included in the GitHub Actions matrix when
+// created by `githubWorkflowGenerate`
+ThisBuild / crossScalaVersions := ciScalaVersions
+ThisBuild / githubWorkflowJavaVersions := ciJavaVersions
+
+/* ------------------------------------------------------------------------- */
+/* TEST FRAMEWORKS */
+// https://www.scala-sbt.org/1.x/docs/Testing.html
+lazy val ScalaTestFramework = new TestFramework("scalatest.Framework")
+
+/* ------------------------------------------------------------------------- */
+/* DEPENDENCY VERSIONS */
 // Core dependencies
 lazy val catsVersion = "3.3.11"
 // FS2 dependencies
 lazy val fs2Version = "3.2.7"
-lazy val fs2KafkaVersion = "3.0.0-M6"
+lazy val fs2KafkaVersion = "3.0.0-M7"
 // WESO dependencies
 lazy val shaclexVersion = "0.2.2"
 lazy val shexsVersion = "0.2.2"
@@ -65,8 +100,8 @@ lazy val catsEffectTestingVersion = "1.4.0" // Integration of ScalaTest with cat
 // Other
 lazy val scalaLoggingVersion = "3.9.4"
 
-// -------------------------------------------------------------------------- //
-
+/* ------------------------------------------------------------------------- */
+/* DEPENDENCIES */
 // Core dependencies
 lazy val catsEffect = "org.typelevel" %% "cats-effect" % catsVersion
 // FS2 dependencies
