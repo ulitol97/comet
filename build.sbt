@@ -1,3 +1,5 @@
+import java.net.URL
+
 /* ------------------------------------------------------------------------- */
 /* BASIC PROPERTIES */
 // See version in "version.sbt"
@@ -46,6 +48,50 @@ lazy val resolverSettings = Seq(
     Resolver.sonatypeRepo("snapshots") // sonatype
   )
 )
+
+/* ------------------------------------------------------------------------- */
+/* PUBLISH SETTINGS */
+// Shared publish settings for all modules.
+// The module is pushed to Sonatype in CI
+// See https://github.com/sbt/sbt-ci-release
+ThisBuild / organization := "com.ragna"
+ThisBuild / homepage := Some(url("https://github.com/ulitol97"))
+ThisBuild / licenses := List("MIT" -> url("https://mit-license.org/"))
+
+//lazy val publishSettings = Seq(
+//  organization := "es.weso",
+//  sonatypeProfileName := "es.weso",
+//  maintainer := "info@weso.es",
+//  homepage := Some(url("https://github.com/weso/rdfshape-api")),
+//  licenses := Seq("MIT" -> url("https://opensource.org/licenses/MIT")),
+//  scmInfo := Some(
+//    ScmInfo(
+//      url("https://github.com/weso/rdfshape-api"),
+//      "scm:git:git@github.com:weso/rdfshape-api.git"
+//    )
+//  ),
+//  developers := List(
+//    Developer(
+//      "WESO",
+//      "WESO Research Group",
+//      "info@weso.es",
+//      new URL("https://github.com/weso")
+//    ),
+//    Developer(
+//      "labra",
+//      "Jose Emilio Labra Gayo",
+//      "labra@uniovi.es",
+//      new URL("https://labra.weso.es/")
+//    ),
+//    Developer(
+//      "ulitol",
+//      "Eduardo Ulibarri Toledo",
+//      "eduulitol@protonmail.com",
+//      new URL("https://github.com/ulitol97")
+//    )
+//  ),
+//  publishMavenStyle := true // generate POM, not ivy
+//)
 
 /* ------------------------------------------------------------------------- */
 /* BUILD INFO */
