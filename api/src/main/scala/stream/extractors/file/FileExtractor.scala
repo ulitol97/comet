@@ -2,7 +2,7 @@ package org.ragna.comet
 package stream.extractors.file
 
 import data.DataFormat
-import implicits.RDFElementImplicits.*
+import implicits.RDFElementImplicits._
 import model.rdf.RDFElement
 import stream.StreamSource
 import stream.extractors.StreamExtractor
@@ -18,7 +18,7 @@ import fs2.{Stream, text}
 
 import java.nio.charset.Charset
 import java.nio.file
-import java.nio.file.Path as JavaNioPath
+import java.nio.file.{Path => JavaNioPath}
 import scala.concurrent.duration.FiniteDuration
 
 /**

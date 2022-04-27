@@ -3,25 +3,25 @@ package validation
 
 import data.DataFormat
 import exception.stream.timed.StreamTimeoutException
-import exception.stream.validations.*
+import exception.stream.validations._
 import stream.StreamSource
 import stream.extractors.StreamExtractor
 import trigger.{TriggerShapeMap, TriggerTargetDeclarations, ValidationTrigger}
-import validation.Validator.Messages.*
+import validation.Validator.Messages._
 import validation.Validator.Types.{RDFValidationItem, RDFValidationReport}
 import validation.configuration.ValidatorConfiguration
-import validation.result.ResultStatus.*
+import validation.result.ResultStatus._
 import validation.result.ValidationResult
 
 import cats.data.EitherT
 import cats.effect.unsafe.implicits.global
 import cats.effect.{Deferred, IO, Resource}
-import cats.implicits.*
-import cats.syntax.all.*
+import cats.implicits._
+import cats.syntax.all._
 import com.typesafe.scalalogging.LazyLogging
 import es.weso.rdf.InferenceEngine
 import es.weso.rdf.jena.RDFAsJenaModel
-import es.weso.schema.{Schema, ShapeMapTrigger, Result as ValidationReport, ValidationTrigger as ValidationTriggerShaclex}
+import es.weso.schema.{Schema, ShapeMapTrigger, Result => ValidationReport, ValidationTrigger => ValidationTriggerShaclex}
 import fs2.{Pipe, Stream}
 import org.apache.kafka.common.KafkaException
 

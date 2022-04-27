@@ -2,15 +2,15 @@ package org.ragna.comet
 package validation.result
 
 import validation.result.ResultStatus
-import validation.result.ResultStatus.*
-import validation.result.ValidationResult.*
-import Messages.*
+import validation.result.ResultStatus._
+import validation.result.ValidationResult._
+import validation.result.ValidationResult.Messages._
 
 import cats.effect.IO
 import cats.effect.unsafe.implicits.global
-import cats.syntax.all.*
+import cats.syntax.all._
 import es.weso.rdf.jena.RDFAsJenaModel
-import es.weso.schema.Result as ValidationReport
+import es.weso.schema.{Result => ValidationReport}
 import io.circe.Json
 
 /**
@@ -73,7 +73,7 @@ object ValidationResult {
    * @param report Report to be formatted to text
    * @return JSON containing the [[report]] information
    */
-  private def getValidationReportJson(report: ValidationReport): Json =
+  private def getValidationReportJson(report: ValidationReport): Json = {
     // Convert ValidationResult to JSON
     val validationResultJson: IO[Json] = for {
       emptyResource <- RDFAsJenaModel.empty
@@ -81,6 +81,7 @@ object ValidationResult {
     } yield json
     // Forced to unsafe run because of ShaclEx implementation
     validationResultJson.unsafeRunSync()
+  }
 
   /**
    * Utility messages used in the validation results

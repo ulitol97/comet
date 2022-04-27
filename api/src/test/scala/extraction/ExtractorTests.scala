@@ -2,23 +2,23 @@ package org.ragna.comet
 package extraction
 
 import data.DataFormat
-import data.DataFormat.*
+import data.DataFormat._
 import exception.stream.timed.StreamTimeoutException
 import implicits.RDFElementImplicits.rdfFromString
 import schema.ShExSchemaFormat
-import schema.ShExSchemaFormat.*
+import schema.ShExSchemaFormat._
 import stream.extractors.StreamExtractor
 import stream.extractors.file.FileExtractor
 import stream.extractors.kafka.{KafkaExtractor, KafkaExtractorConfiguration}
 import stream.extractors.list.ListExtractor
-import trigger.ShapeMapFormat.*
+import trigger.ShapeMapFormat._
 import trigger.TriggerModeType.{SHAPEMAP, TARGET_DECLARATIONS}
 import trigger.{ShapeMapFormat, TriggerModeType, ValidationTrigger}
 import utils.Samples.StreamSamples.mkSingleValidationResult
 import utils.{FileUtils, Samples}
 import validation.Validator
 import validation.configuration.ValidatorConfiguration
-import validation.result.ResultStatus.*
+import validation.result.ResultStatus._
 import validation.result.ValidationResult
 
 import cats.effect.IO
@@ -27,7 +27,7 @@ import es.weso.schema.Schema
 import org.scalatest.freespec.AsyncFreeSpec
 import org.scalatest.matchers.should.Matchers
 
-import scala.concurrent.duration.*
+import scala.concurrent.duration._
 import scala.language.postfixOps
 
 /**

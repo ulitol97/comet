@@ -4,8 +4,6 @@ package exception.stream.timed
 import exception.stream.validations.{StreamValidationException, StreamValidationExceptionCompanion}
 import validation.result.ResultStatus
 
-import es.weso.schema.Result as ValidationReport
-
 import scala.concurrent.duration.FiniteDuration
 
 
@@ -26,7 +24,8 @@ object StreamTimeoutException {
 
   /** Fixed message preceding the exception message
    */
-  private[timed] def mkMessage(interval: Option[FiniteDuration]) =
+  private[timed] def mkMessage(interval: Option[FiniteDuration]) = {
     val durationStr = interval.map(d => s" ($d)").getOrElse("")
     s"$prefix$durationStr"
+  }
 }

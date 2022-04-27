@@ -7,13 +7,13 @@ import stream.StreamSource
 import stream.extractors.StreamExtractor
 
 import cats.effect.{IO, Temporal}
-import cats.implicits.*
+import cats.implicits._
 import es.weso.rdf.InferenceEngine
 import fs2.Stream
-import fs2.kafka.*
+import fs2.kafka._
 import org.apache.kafka.common.KafkaException
 
-import scala.concurrent.duration.*
+import scala.concurrent.duration._
 
 /**
  * [[StreamExtractor]] capable of extracting RDF items from an Apache Kafka

@@ -2,19 +2,19 @@ package org.ragna.comet
 package validation.ouputs
 
 import data.DataFormat
-import data.DataFormat.*
+import data.DataFormat._
 import implicits.RDFElementImplicits.rdfFromString
 import schema.ShExSchemaFormat
-import schema.ShExSchemaFormat.*
+import schema.ShExSchemaFormat._
 import stream.extractors.StreamExtractor
 import stream.extractors.list.ListExtractor
-import trigger.ShapeMapFormat.*
+import trigger.ShapeMapFormat._
 import trigger.TriggerModeType.{SHAPEMAP, TARGET_DECLARATIONS}
 import trigger.{ShapeMapFormat, TriggerModeType, ValidationTrigger}
 import utils.Samples.StreamSamples.mkSingleValidationResult
 import validation.Validator
 import validation.configuration.ValidatorConfiguration
-import validation.result.ResultStatus.*
+import validation.result.ResultStatus._
 import validation.result.ValidationResult
 
 import cats.effect.IO

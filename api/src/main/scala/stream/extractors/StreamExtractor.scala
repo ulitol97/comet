@@ -6,19 +6,19 @@ import exception.stream.timed.StreamTimeoutException
 import implicits.RDFElementImplicits
 import model.rdf.RDFElement
 import stream.StreamSource
-import stream.extractors.StreamExtractor.Defaults.*
+import stream.extractors.StreamExtractor.Defaults._
 import stream.extractors.StreamExtractor.Errors
 import utils.{Fs2StreamOps, Timer}
 import validation.Validator.Types.RDFValidationItem
 import validation.result.ValidationResult
 
-import cats.effect.*
+import cats.effect._
 import cats.effect.unsafe.implicits.global
 import es.weso.rdf.jena.RDFAsJenaModel
 import es.weso.rdf.{InferenceEngine, NONE}
 import fs2.{Pipe, Stream}
 
-import scala.concurrent.duration.*
+import scala.concurrent.duration._
 
 /**
  * Abstract class for any extractor capable of reaching a data Stream and
@@ -81,7 +81,7 @@ abstract class StreamExtractor[A](val format: DataFormat,
    * Stream containing the items as they arrive from the source of data.
    * Implementations shall define how this initial stream is obtained.
    */
-  private[extractors] lazy val inputStream: Stream[IO, A]
+  private[extractors] lazy val inputStream: Stream[IO, A] = Stream.empty
 
   /**
    * The [[inputStream]] of items, timed to fail if not fed for a certain duration

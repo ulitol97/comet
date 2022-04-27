@@ -5,7 +5,7 @@ import cats.effect.{FiberIO, IO, Temporal}
 import com.typesafe.scalalogging.LazyLogging
 
 import scala.concurrent.ExecutionContext
-import scala.concurrent.duration.*
+import scala.concurrent.duration._
 
 /**
  * Utility class capable of delaying the execution of an IO action for a certain

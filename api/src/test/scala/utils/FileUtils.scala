@@ -5,11 +5,11 @@ import stream.extractors.file.{Charsets, FileExtractor}
 
 import cats.effect.{IO, Resource}
 import com.typesafe.scalalogging.LazyLogging
-import fs2.io.file.*
+import fs2.io.file._
 import fs2.{Stream, text}
 
 import java.nio.charset.Charset
-import scala.concurrent.duration.*
+import scala.concurrent.duration._
 
 /**
  * Utilities to work with files, in the context of FS2 Streams and using

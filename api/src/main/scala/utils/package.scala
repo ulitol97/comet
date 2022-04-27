@@ -3,14 +3,14 @@ package org.ragna.comet
 import exception.stream.timed.StreamTimeoutException
 import utils.Timer
 
-import cats.effect.*
+import cats.effect._
 import cats.effect.unsafe.implicits.global
-import cats.instances.list.*
-import cats.syntax.all.*
+import cats.instances.list._
+import cats.syntax.all._
 import com.typesafe.scalalogging.LazyLogging
 import fs2.{Pipe, Stream}
 
-import scala.concurrent.duration.*
+import scala.concurrent.duration._
 
 /**
  * Package object with implicit classes providing extension methods

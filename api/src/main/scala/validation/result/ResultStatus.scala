@@ -1,31 +1,19 @@
 package org.ragna.comet
 package validation.result
 
-import validation.result.ResultStatus.{ERRORED, INVALID}
+import es.weso.schema.{Result => ValidationReport}
 
-import es.weso.schema.Result as ValidationReport
+/**
+ * Abstract class representing the status a validation result can have
+ *
+ * @note Used as an enum-replacement for Scala 2 syntax
+ * @see [[https://stackoverflow.com/a/71206847/9744696]]
+ */
+sealed abstract class ResultStatus()
 
 /**
  * Enum with the different result statuses acknowledged by the app
- *
  */
-enum ResultStatus {
-  /**
-   * Data could be validated and turned out VALID
-   */
-  case VALID
-
-  /**
-   * Data could be validated and turned out INVALID
-   */
-  case INVALID
-
-  /**
-   * Data could not be validated, errors arose during the validation process
-   */
-  case ERRORED
-}
-
 object ResultStatus {
   /**
    * Shortcut for extracting the result status from a Validation result
@@ -39,4 +27,19 @@ object ResultStatus {
       case Some(r) => if (r.isValid) VALID else INVALID
       case None => ERRORED
     }
+
+  /**
+   * Data could be validated and turned out VALID
+   */
+  case object VALID extends ResultStatus
+
+  /**
+   * Data could be validated and turned out INVALID
+   */
+  case object INVALID extends ResultStatus
+
+  /**
+   * Data could not be validated, errors arose during the validation process
+   */
+  case object ERRORED extends ResultStatus
 }

@@ -1,10 +1,10 @@
 package org.ragna.comet
 package exception.stream.validations
 
-import exception.stream.*
-import validation.result.ResultStatus.*
+import exception.stream._
+import validation.result.ResultStatus._
 
-import es.weso.schema.Result as ValidationReport
+import es.weso.schema.{Result => ValidationReport}
 
 
 /** Custom exception thrown when a failure occurs while

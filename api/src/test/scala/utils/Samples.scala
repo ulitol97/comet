@@ -2,7 +2,7 @@ package org.ragna.comet
 package utils
 
 import data.DataFormat
-import data.DataFormat.*
+import data.DataFormat._
 import exception.stream.timed.StreamTimeoutException
 import implicits.RDFElementImplicits.rdfFromString
 import schema.ShExSchemaFormat

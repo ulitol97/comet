@@ -3,7 +3,7 @@ package validation.configuration
 
 
 import trigger.ValidationTrigger
-import validation.configuration.ValidatorConfiguration.Defaults.*
+import validation.configuration.ValidatorConfiguration.Defaults._
 import validation.configuration.ValidatorConfiguration.Errors
 
 import es.weso.schema.Schema

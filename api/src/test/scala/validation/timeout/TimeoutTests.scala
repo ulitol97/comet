@@ -2,22 +2,22 @@ package org.ragna.comet
 package validation.timeout
 
 import data.DataFormat
-import data.DataFormat.*
+import data.DataFormat._
 import exception.stream.timed.StreamTimeoutException
 import exception.stream.validations.{StreamErroredItemException, StreamInvalidItemException}
 import implicits.RDFElementImplicits.rdfFromString
 import schema.ShExSchemaFormat
-import schema.ShExSchemaFormat.*
+import schema.ShExSchemaFormat._
 import stream.extractors.StreamExtractor
 import stream.extractors.list.ListExtractor
-import trigger.ShapeMapFormat.*
+import trigger.ShapeMapFormat._
 import trigger.TriggerModeType.{SHAPEMAP, TARGET_DECLARATIONS}
 import trigger.{ShapeMapFormat, TriggerModeType, ValidationTrigger}
 import utils.Samples.StreamSamples.mkSingleValidationResult
 import validation.Validator
 import validation.configuration.ValidatorConfiguration
 import validation.ouputs.SchemaTests
-import validation.result.ResultStatus.*
+import validation.result.ResultStatus._
 import validation.result.ValidationResult
 
 import cats.effect.IO
@@ -26,7 +26,7 @@ import es.weso.schema.Schema
 import org.scalatest.freespec.AsyncFreeSpec
 import org.scalatest.matchers.should.Matchers
 
-import scala.concurrent.duration.*
+import scala.concurrent.duration._
 
 /**
  * Test suite checking that the validation mechanism forcibly halts according

@@ -1,11 +1,27 @@
-
-
 /* ------------------------------------------------------------------------- */
 /* BASIC PROPERTIES */
 // See version in "version.sbt"
-Global / name := "comet" // Friendly app name
+
+// Friendly app name
+Global / name := "comet"
+// Scala version used in development
 ThisBuild / scalaVersion := "3.1.2"
+
+// Lint exclusions
 Global / excludeLintKeys ++= Set(name, idePackagePrefix)
+
+/* ------------------------------------------------------------------------- */
+/* (CROSS) COMPILATION SETTINGS */
+// Define Scala/Java reusable constants
+lazy val scala2_13 = "2.13.8"
+lazy val scala3 = "3.1.2"
+lazy val java11 = JavaSpec.temurin("11")
+lazy val java17 = JavaSpec.temurin("17")
+
+// Although the library is developed and tested for Scala 3, we cross-compile
+// to Scala 2 as well, to reach a wider target
+// See https://www.scala-sbt.org/1.x/docs/Cross-Build.html
+lazy val supportedScalaVersions = List(scala2_13, scala3)
 
 /* ------------------------------------------------------------------------- */
 /* MODULES */
@@ -13,6 +29,17 @@ Global / excludeLintKeys ++= Set(name, idePackagePrefix)
 // Root project
 lazy val root = (project in file("."))
   .aggregate(comet)
+  .settings(
+    // crossScalaVersions must be set to Nil on the root project
+    crossScalaVersions := Nil,
+    // Publishing disabled in root project
+    publish / skip := true,
+    excludeDependencies ++= Seq(
+      // Exclude slf4j backend if present in other dependencies to avoid
+      // warnings/conflicts with logback
+      ExclusionRule("org.slf4j", "slf4j-simple")
+    )
+  )
 
 // Comet's core API, to be published
 lazy val comet = (project in file("api"))
@@ -21,6 +48,7 @@ lazy val comet = (project in file("api"))
     name := "comet",
     idePackagePrefix := Some("org.ragna.comet"),
     Compile / run / fork := true, // https://stackoverflow.com/q/66372308/9744696
+    crossScalaVersions := supportedScalaVersions, // cross-compile
     resolverSettings,
     testFrameworks += ScalaTestFramework,
     buildInfoSettings,
@@ -107,16 +135,12 @@ lazy val packagingSettings = Seq(
 //  - Java versions used: LST 11, LTS 17
 //  - etc.
 // See https://github.com/djspiewak/sbt-github-actions
-lazy val scala3 = "3.1.2"
 lazy val ciScalaVersions = List(scala3)
-
-lazy val java11 = JavaSpec.temurin("11")
-lazy val java17 = JavaSpec.temurin("17")
 lazy val ciJavaVersions = List(java11, java17)
 
 // Specify which versions to be included in the GitHub Actions matrix when
 // created by `githubWorkflowGenerate`
-ThisBuild / crossScalaVersions := ciScalaVersions
+ThisBuild / githubWorkflowScalaVersions := ciScalaVersions
 ThisBuild / githubWorkflowJavaVersions := ciJavaVersions
 
 /* ------------------------------------------------------------------------- */

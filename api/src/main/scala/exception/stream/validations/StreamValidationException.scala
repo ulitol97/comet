@@ -4,7 +4,7 @@ package exception.stream.validations
 import exception.stream.validations.{StreamValidationException, StreamValidationExceptionCompanion}
 import validation.result.ResultStatus
 
-import es.weso.schema.Result as ValidationReport
+import es.weso.schema.{Result => ValidationReport}
 
 
 /** Abstract class covering custom exceptions thrown when a failure occurs while

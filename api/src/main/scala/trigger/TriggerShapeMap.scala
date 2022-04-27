@@ -1,12 +1,12 @@
 package org.ragna.comet
 package trigger
 
-import cats.*
-import cats.data.*
-import cats.effect.*
-import cats.implicits.*
+import cats._
+import cats.data._
+import cats.effect._
+import cats.implicits._
 import es.weso.rdf.PrefixMap
-import es.weso.schema.{Schema, ShapeMapTrigger, TargetDeclarations, ValidationTrigger as ValidationTriggerW}
+import es.weso.schema.{Schema, ShapeMapTrigger, TargetDeclarations, ValidationTrigger => ValidationTriggerW}
 import es.weso.shapemaps.ShapeMap
 
 import scala.language.postfixOps
@@ -32,8 +32,6 @@ sealed case class TriggerShapeMap(shapeMapText: String,
   extends ValidationTrigger {
 
 
-  override val `type`: TriggerModeType = TriggerModeType.SHAPEMAP
-
   /**
    * Attempt to create the real ShaclEx ShapeMap model or return a list with
    * the errors occurred
@@ -47,6 +45,8 @@ sealed case class TriggerShapeMap(shapeMapText: String,
       nodesPrefixMap = nodesPrefixMap,
       shapesPrefixMap = shapesPrefixMap
     ).left.map(_.toList)
+
+  override val `type`: TriggerModeType = TriggerModeType.SHAPEMAP
 
   override def getValidationTrigger: Either[List[String], ValidationTriggerW] =
     shapeMap.map(ShapeMapTrigger(_))

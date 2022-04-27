@@ -2,15 +2,15 @@ package org.ragna.comet
 package stream.extractors.kafka
 
 import stream.extractors.StreamExtractor.Errors.mkExtractorCreationError
-import stream.extractors.kafka.KafkaExtractorConfiguration.Constraints.*
-import stream.extractors.kafka.KafkaExtractorConfiguration.Defaults.*
-import stream.extractors.kafka.KafkaExtractorConfiguration.Errors.*
+import stream.extractors.kafka.KafkaExtractorConfiguration.Constraints._
+import stream.extractors.kafka.KafkaExtractorConfiguration.Defaults._
+import stream.extractors.kafka.KafkaExtractorConfiguration.Errors._
 import utils.DurationValidationOps
 
 import cats.implicits.catsSyntaxOptionId
 import fs2.kafka.{AutoOffsetReset, CommitRecovery}
 
-import scala.concurrent.duration.*
+import scala.concurrent.duration._
 
 /**
  * Configuration and parameters related to how the program should interact with

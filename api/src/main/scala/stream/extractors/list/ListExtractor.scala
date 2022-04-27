@@ -14,7 +14,7 @@ import fs2.Stream
 import fs2.io.file.{Files, Path}
 import fs2.kafka.KafkaConsumer
 
-import scala.concurrent.duration.*
+import scala.concurrent.duration._
 
 /**
  * [[StreamExtractor]] capable of extracting RDF items from an in-memory
