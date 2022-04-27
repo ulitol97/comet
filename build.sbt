@@ -7,7 +7,13 @@ Global / excludeLintKeys ++= Set(name, idePackagePrefix)
 
 /* ------------------------------------------------------------------------- */
 /* MODULES */
-lazy val comet = (project in file("."))
+
+// Root project
+lazy val root = (project in file("."))
+  .aggregate(comet)
+
+// Comet's core API, to be published
+lazy val comet = (project in file("api"))
   .enablePlugins(BuildInfoPlugin)
   .settings(
     name := "comet",
@@ -55,6 +61,20 @@ lazy val buildInfoSettings = Seq(
   ),
   buildInfoPackage := "buildinfo",
   buildInfoObject := "BuildInfo"
+)
+
+/* PACKAGING SETTINGS */
+// Shared packaging settings for all modules
+lazy val packagingSettings = Seq(
+  // Do not package logback files in .jar, they interfere with other logback
+  // files in classpath
+  Compile / packageBin / mappings ~= { project =>
+    project.filter { case (file, _) =>
+      val fileName = file.getName
+      !(fileName.startsWith("logback") && (fileName.endsWith(".xml") || fileName
+        .endsWith(".groovy")))
+    }
+  }
 )
 
 /* ------------------------------------------------------------------------- */
