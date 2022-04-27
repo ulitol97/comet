@@ -5,16 +5,9 @@ import data.DataFormat
 import data.DataFormat._
 import exception.stream.timed.StreamTimeoutException
 import implicits.RDFElementImplicits.rdfFromString
-import schema.ShExSchemaFormat
-import schema.ShExSchemaFormat._
-import stream.extractors.StreamExtractor
 import stream.extractors.file.FileExtractor
 import stream.extractors.kafka.{KafkaExtractor, KafkaExtractorConfiguration}
 import stream.extractors.list.ListExtractor
-import trigger.ShapeMapFormat._
-import trigger.TriggerModeType.{SHAPEMAP, TARGET_DECLARATIONS}
-import trigger.{ShapeMapFormat, TriggerModeType, ValidationTrigger}
-import utils.Samples.StreamSamples.mkSingleValidationResult
 import utils.{FileUtils, Samples}
 import validation.Validator
 import validation.configuration.ValidatorConfiguration
@@ -23,7 +16,6 @@ import validation.result.ValidationResult
 
 import cats.effect.IO
 import cats.effect.testing.scalatest.AsyncIOSpec
-import es.weso.schema.Schema
 import org.scalatest.freespec.AsyncFreeSpec
 import org.scalatest.matchers.should.Matchers
 
@@ -80,7 +72,7 @@ class ExtractorTests extends AsyncFreeSpec with AsyncIOSpec with Matchers {
           configuration = ValidatorConfiguration(schema, trigger)
           validator = new Validator(configuration, extractor)
 
-          results: List[ValidationResult] <- validator.validate.compile.toList
+          results <- validator.validate.compile.toList
         } yield results
 
       // Same amount of outputs, all VALID
@@ -113,7 +105,7 @@ class ExtractorTests extends AsyncFreeSpec with AsyncIOSpec with Matchers {
             configuration = ValidatorConfiguration(schema, trigger)
             validator = new Validator(configuration, extractor)
 
-            results: List[ValidationResult] <- validator.validate.compile.toList
+            results <- validator.validate.compile.toList
           } yield results
       )
 
@@ -147,7 +139,7 @@ class ExtractorTests extends AsyncFreeSpec with AsyncIOSpec with Matchers {
           validatorConfiguration = ValidatorConfiguration(schema, trigger)
           validator = new Validator(validatorConfiguration, extractor)
 
-          results: List[Either[Throwable, ValidationResult]] <- validator.validate
+          results <- validator.validate
             .attempt
             .compile
             .toList

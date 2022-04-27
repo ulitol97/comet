@@ -1,9 +1,6 @@
 package org.ragna.comet
 package exception.stream.timed
 
-import exception.stream.validations.{StreamValidationException, StreamValidationExceptionCompanion}
-import validation.result.ResultStatus
-
 import scala.concurrent.duration.FiniteDuration
 
 

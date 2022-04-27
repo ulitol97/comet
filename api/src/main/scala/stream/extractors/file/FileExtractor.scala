@@ -3,22 +3,16 @@ package stream.extractors.file
 
 import data.DataFormat
 import implicits.RDFElementImplicits._
-import model.rdf.RDFElement
 import stream.StreamSource
 import stream.extractors.StreamExtractor
-import stream.extractors.file.FileExtractor
-import stream.extractors.file.FileExtractor.Defaults
+import stream.extractors.file.FileExtractor._
 
 import cats.effect.IO
-import cats.implicits.toString
 import es.weso.rdf.InferenceEngine
 import fs2.io.file.{Files, Path}
-import fs2.kafka.KafkaConsumer
 import fs2.{Stream, text}
 
 import java.nio.charset.Charset
-import java.nio.file
-import java.nio.file.{Path => JavaNioPath}
 import scala.concurrent.duration.FiniteDuration
 
 /**

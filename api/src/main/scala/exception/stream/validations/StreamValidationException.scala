@@ -1,7 +1,6 @@
 package org.ragna.comet
 package exception.stream.validations
 
-import exception.stream.validations.{StreamValidationException, StreamValidationExceptionCompanion}
 import validation.result.ResultStatus
 
 import es.weso.schema.{Result => ValidationReport}

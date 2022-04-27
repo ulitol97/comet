@@ -1,7 +1,7 @@
 package org.ragna.comet
 package trigger
 
-import es.weso.schema.{Schema, ValidationTrigger => ValidationTriggerW}
+import es.weso.schema.{ValidationTrigger => ValidationTriggerW}
 
 /**
  * Common trait to all validation triggers handled by the library

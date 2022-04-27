@@ -1,7 +1,7 @@
 package org.ragna.comet
 package trigger
 
-import es.weso.schema.{Schema, TargetDeclarations, ValidationTrigger => ValidationTriggerW}
+import es.weso.schema.{TargetDeclarations, ValidationTrigger => ValidationTriggerW}
 
 
 /** Data class representing a validation trigger by target declarations,

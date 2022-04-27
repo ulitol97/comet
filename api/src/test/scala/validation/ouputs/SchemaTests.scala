@@ -1,25 +1,13 @@
 package org.ragna.comet
 package validation.ouputs
 
-import data.DataFormat
 import data.DataFormat._
-import implicits.RDFElementImplicits.rdfFromString
-import schema.ShExSchemaFormat
 import schema.ShExSchemaFormat._
-import stream.extractors.StreamExtractor
-import stream.extractors.list.ListExtractor
-import trigger.ShapeMapFormat._
-import trigger.TriggerModeType.{SHAPEMAP, TARGET_DECLARATIONS}
-import trigger.{ShapeMapFormat, TriggerModeType, ValidationTrigger}
 import utils.Samples.StreamSamples.mkSingleValidationResult
-import validation.Validator
-import validation.configuration.ValidatorConfiguration
 import validation.result.ResultStatus._
-import validation.result.ValidationResult
 
-import cats.effect.IO
 import cats.effect.testing.scalatest.AsyncIOSpec
-import es.weso.schema.Schema
+import cats.implicits.catsSyntaxEitherId
 import org.scalatest.freespec.AsyncFreeSpec
 import org.scalatest.matchers.should.Matchers
 
@@ -53,34 +41,34 @@ class SchemaTests extends AsyncFreeSpec with AsyncIOSpec with Matchers {
     "using ShExC syntax" - {
       "validate VALID RDF data" - {
         "in Turtle format" in {
-          mkSingleValidationResult(TURTLE, SHEXC, valid = true)
+          mkSingleValidationResult(TURTLE, SHEXC.asRight, valid = true)
             .asserting(_.status shouldBe VALID)
         }
 
         "in JSON-LD format" in {
-          mkSingleValidationResult(JSONLD, SHEXC, valid = true)
+          mkSingleValidationResult(JSONLD, SHEXC.asRight, valid = true)
             .asserting(_.status shouldBe VALID)
         }
 
         "in RDF/XML format" in {
-          mkSingleValidationResult(RDFXML, SHEXC, valid = true)
+          mkSingleValidationResult(RDFXML, SHEXC.asRight, valid = true)
             .asserting(_.status shouldBe VALID)
         }
       }
 
       "do not validate INVALID RDF data" - {
         "in Turtle format" in {
-          mkSingleValidationResult(TURTLE, SHEXC, valid = false)
+          mkSingleValidationResult(TURTLE, SHEXC.asRight, valid = false)
             .asserting(_.status shouldBe INVALID)
         }
 
         "in JSON-LD format" in {
-          mkSingleValidationResult(JSONLD, SHEXC, valid = false)
+          mkSingleValidationResult(JSONLD, SHEXC.asRight, valid = false)
             .asserting(_.status shouldBe INVALID)
         }
 
         "in RDF/XML format" in {
-          mkSingleValidationResult(RDFXML, SHEXC, valid = false)
+          mkSingleValidationResult(RDFXML, SHEXC.asRight, valid = false)
             .asserting(_.status shouldBe INVALID)
         }
       }
@@ -92,34 +80,34 @@ class SchemaTests extends AsyncFreeSpec with AsyncIOSpec with Matchers {
     "using TURTLE syntax" - {
       "validate VALID RDF data" - {
         "in Turtle format" in {
-          mkSingleValidationResult(rdfFormat = TURTLE, schemaFormat = TURTLE, valid = true)
+          mkSingleValidationResult(rdfFormat = TURTLE, schemaFormat = TURTLE.asLeft, valid = true)
             .asserting(_.status shouldBe VALID)
         }
 
         "in JSON-LD format" in {
-          mkSingleValidationResult(rdfFormat = JSONLD, schemaFormat = TURTLE, valid = true)
+          mkSingleValidationResult(rdfFormat = JSONLD, schemaFormat = TURTLE.asLeft, valid = true)
             .asserting(_.status shouldBe VALID)
         }
 
         "in RDF/XML format" in {
-          mkSingleValidationResult(rdfFormat = RDFXML, schemaFormat = TURTLE, valid = true)
+          mkSingleValidationResult(rdfFormat = RDFXML, schemaFormat = TURTLE.asLeft, valid = true)
             .asserting(_.status shouldBe VALID)
         }
       }
 
       "do not validate INVALID RDF data" - {
         "in Turtle format" in {
-          mkSingleValidationResult(rdfFormat = TURTLE, schemaFormat = TURTLE, valid = false)
+          mkSingleValidationResult(rdfFormat = TURTLE, schemaFormat = TURTLE.asLeft, valid = false)
             .asserting(_.status shouldBe INVALID)
         }
 
         "in JSON-LD format" in {
-          mkSingleValidationResult(rdfFormat = JSONLD, schemaFormat = TURTLE, valid = false)
+          mkSingleValidationResult(rdfFormat = JSONLD, schemaFormat = TURTLE.asLeft, valid = false)
             .asserting(_.status shouldBe INVALID)
         }
 
         "in RDF/XML format" in {
-          mkSingleValidationResult(rdfFormat = RDFXML, schemaFormat = TURTLE, valid = false)
+          mkSingleValidationResult(rdfFormat = RDFXML, schemaFormat = TURTLE.asLeft, valid = false)
             .asserting(_.status shouldBe INVALID)
         }
       }
@@ -128,34 +116,34 @@ class SchemaTests extends AsyncFreeSpec with AsyncIOSpec with Matchers {
     "using JSON-LD syntax" - {
       "validate VALID RDF data" - {
         "in Turtle format" in {
-          mkSingleValidationResult(rdfFormat = TURTLE, schemaFormat = JSONLD, valid = true)
+          mkSingleValidationResult(rdfFormat = TURTLE, schemaFormat = JSONLD.asLeft, valid = true)
             .asserting(_.status shouldBe VALID)
         }
 
         "in JSON-LD format" in {
-          mkSingleValidationResult(rdfFormat = JSONLD, schemaFormat = JSONLD, valid = true)
+          mkSingleValidationResult(rdfFormat = JSONLD, schemaFormat = JSONLD.asLeft, valid = true)
             .asserting(_.status shouldBe VALID)
         }
 
         "in RDF/XML format" in {
-          mkSingleValidationResult(rdfFormat = RDFXML, schemaFormat = JSONLD, valid = true)
+          mkSingleValidationResult(rdfFormat = RDFXML, schemaFormat = JSONLD.asLeft, valid = true)
             .asserting(_.status shouldBe VALID)
         }
       }
 
       "do not validate INVALID RDF data" - {
         "in Turtle format" in {
-          mkSingleValidationResult(rdfFormat = TURTLE, schemaFormat = JSONLD, valid = false)
+          mkSingleValidationResult(rdfFormat = TURTLE, schemaFormat = JSONLD.asLeft, valid = false)
             .asserting(_.status shouldBe INVALID)
         }
 
         "in JSON-LD format" in {
-          mkSingleValidationResult(rdfFormat = JSONLD, schemaFormat = JSONLD, valid = false)
+          mkSingleValidationResult(rdfFormat = JSONLD, schemaFormat = JSONLD.asLeft, valid = false)
             .asserting(_.status shouldBe INVALID)
         }
 
         "in RDF/XML format" in {
-          mkSingleValidationResult(rdfFormat = RDFXML, schemaFormat = JSONLD, valid = false)
+          mkSingleValidationResult(rdfFormat = RDFXML, schemaFormat = JSONLD.asLeft, valid = false)
             .asserting(_.status shouldBe INVALID)
         }
       }
@@ -164,34 +152,34 @@ class SchemaTests extends AsyncFreeSpec with AsyncIOSpec with Matchers {
     "using RDF/XML syntax" - {
       "validate VALID RDF data" - {
         "in Turtle format" in {
-          mkSingleValidationResult(rdfFormat = TURTLE, schemaFormat = RDFXML, valid = true)
+          mkSingleValidationResult(rdfFormat = TURTLE, schemaFormat = RDFXML.asLeft, valid = true)
             .asserting(_.status shouldBe VALID)
         }
 
         "in JSON-LD format" in {
-          mkSingleValidationResult(rdfFormat = JSONLD, schemaFormat = RDFXML, valid = true)
+          mkSingleValidationResult(rdfFormat = JSONLD, schemaFormat = RDFXML.asLeft, valid = true)
             .asserting(_.status shouldBe VALID)
         }
 
         "in RDF/XML format" in {
-          mkSingleValidationResult(rdfFormat = RDFXML, schemaFormat = RDFXML, valid = true)
+          mkSingleValidationResult(rdfFormat = RDFXML, schemaFormat = RDFXML.asLeft, valid = true)
             .asserting(_.status shouldBe VALID)
         }
       }
 
       "do not validate INVALID RDF data" - {
         "in Turtle format" in {
-          mkSingleValidationResult(rdfFormat = TURTLE, schemaFormat = RDFXML, valid = false)
+          mkSingleValidationResult(rdfFormat = TURTLE, schemaFormat = RDFXML.asLeft, valid = false)
             .asserting(_.status shouldBe INVALID)
         }
 
         "in JSON-LD format" in {
-          mkSingleValidationResult(rdfFormat = JSONLD, schemaFormat = RDFXML, valid = false)
+          mkSingleValidationResult(rdfFormat = JSONLD, schemaFormat = RDFXML.asLeft, valid = false)
             .asserting(_.status shouldBe INVALID)
         }
 
         "in RDF/XML format" in {
-          mkSingleValidationResult(rdfFormat = RDFXML, schemaFormat = RDFXML, valid = false)
+          mkSingleValidationResult(rdfFormat = RDFXML, schemaFormat = RDFXML.asLeft, valid = false)
             .asserting(_.status shouldBe INVALID)
         }
       }

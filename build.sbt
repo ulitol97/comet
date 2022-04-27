@@ -27,9 +27,10 @@ lazy val supportedScalaVersions = List(scala2_13, scala3)
 /* MODULES */
 
 // Root project
-lazy val root = (project in file("."))
-  .aggregate(comet)
+lazy val comet = (project in file("."))
+  .aggregate(api)
   .settings(
+    name := "root",
     // crossScalaVersions must be set to Nil on the root project
     crossScalaVersions := Nil,
     // Publishing disabled in root project
@@ -42,7 +43,7 @@ lazy val root = (project in file("."))
   )
 
 // Comet's core API, to be published
-lazy val comet = (project in file("api"))
+lazy val api = (project in file("api"))
   .enablePlugins(BuildInfoPlugin)
   .settings(
     name := "comet",
@@ -80,9 +81,9 @@ lazy val resolverSettings = Seq(
 /* ------------------------------------------------------------------------- */
 /* PUBLISH SETTINGS */
 // Shared publish settings for all modules.
-// The module is pushed to Sonatype in CI
+// The module is pushed to Sonatype in CI (cross published for cross scala versions) 
 // See https://github.com/sbt/sbt-ci-release
-ThisBuild / organization := "com.ragna"
+ThisBuild / organization := "io.github.ulitol97"
 ThisBuild / homepage := Some(url("https://github.com/ulitol97"))
 ThisBuild / licenses := List("MIT" -> url("https://mit-license.org/"))
 ThisBuild / developers := List(
@@ -131,17 +132,20 @@ lazy val packagingSettings = Seq(
 /* SBT GITHUB ACTIONS */
 // GitHub Actions for build/test and clean are automatically generated
 // The settings of these actions are configured here:
-//  - Scala versions used: scala 3 (scala 2 won't compile Scala 3 code)
+//  - Scala versions used: scala 2.13, scala 3 (cross compiled)
 //  - Java versions used: LST 11, LTS 17
 //  - etc.
 // See https://github.com/djspiewak/sbt-github-actions
-lazy val ciScalaVersions = List(scala3)
+lazy val ciScalaVersions = List(scala2_13, scala3)
 lazy val ciJavaVersions = List(java11, java17)
 
 // Specify which versions to be included in the GitHub Actions matrix when
 // created by `githubWorkflowGenerate`
 ThisBuild / githubWorkflowScalaVersions := ciScalaVersions
 ThisBuild / githubWorkflowJavaVersions := ciJavaVersions
+
+// Do not try to publish when building and testing, there's another action for that
+ThisBuild / githubWorkflowPublishTargetBranches := Seq()
 
 /* ------------------------------------------------------------------------- */
 /* TEST FRAMEWORKS */

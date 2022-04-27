@@ -6,11 +6,10 @@ import data.DataFormat._
 import exception.stream.timed.StreamTimeoutException
 import implicits.RDFElementImplicits.rdfFromString
 import schema.ShExSchemaFormat
-import schema.ShExSchemaFormat.{SHEXC, SHEXJ}
+import schema.ShExSchemaFormat.SHEXC
 import stream.extractors.list.ListExtractor
-import trigger.ShapeMapFormat.{COMPACT, JSON}
+import trigger.ShapeMapFormat.COMPACT
 import trigger.{ShapeMapFormat, TriggerShapeMap, TriggerTargetDeclarations, ValidationTrigger}
-import utils.Samples.RdfSamples.dateFormatter
 import validation.Validator
 import validation.configuration.ValidatorConfiguration
 import validation.result.ValidationResult
@@ -86,7 +85,7 @@ object Samples {
      *         following the data, schema and trigger templates in [[Samples]]
      */
     def mkSingleValidationResult(rdfFormat: DataFormat,
-                                 schemaFormat: DataFormat | ShExSchemaFormat,
+                                 schemaFormat: Either[DataFormat, ShExSchemaFormat],
                                  valid: Boolean = true,
                                  haltOnInvalid: Boolean = false,
                                  haltOnError: Boolean = false,
@@ -129,7 +128,7 @@ object Samples {
      */
     def mkSingleValidationResult(rdfItem: String,
                                  rdfFormat: DataFormat,
-                                 schemaFormat: DataFormat | ShExSchemaFormat,
+                                 schemaFormat: Either[DataFormat, ShExSchemaFormat],
                                  haltOnInvalid: Boolean,
                                  haltOnError: Boolean,
                                  extractorTimeout: Option[FiniteDuration]
@@ -137,24 +136,24 @@ object Samples {
       for {
         // Make the schema
         schema <- schemaFormat match {
-          case df: DataFormat => SchemaSamples.mkSchemaShaclIO(df)
-          case sf: ShExSchemaFormat => SchemaSamples.mkSchemaShExIO(sf)
+          case Left(dataFormat) => SchemaSamples.mkSchemaShaclIO(dataFormat)
+          case Right(schemaFormat) => SchemaSamples.mkSchemaShExIO(schemaFormat)
         }
         // Make the validation trigger (inferred from schema type)
         trigger = schemaFormat match {
-          case _: DataFormat => TriggerSamples.mkTriggerShacl
-          case _: ShExSchemaFormat => TriggerSamples.mkTriggerShex(COMPACT)
+          case Left(_) => TriggerSamples.mkTriggerShacl
+          case Right(_) => TriggerSamples.mkTriggerShex(COMPACT)
         }
         // Get the RDF item into a list extractor
-        extractor = ListExtractor(items = List(rdfItem), format = rdfFormat,
+        extractor: ListExtractor[String] = ListExtractor(items = List(rdfItem), format = rdfFormat,
           itemTimeout = extractorTimeout)
 
         // Open validation stream and collect the validation results
         // Validator settings
         validatorConfiguration = ValidatorConfiguration(schema, trigger,
           haltOnInvalid = haltOnInvalid, haltOnErrored = haltOnError)
-        validator = Validator(validatorConfiguration, extractor)
-        results: List[ValidationResult] <- validator.validate.compile.toList
+        validator = new Validator(validatorConfiguration, extractor)
+        results <- validator.validate.compile.toList
       } yield results.head
     }
 
@@ -169,7 +168,7 @@ object Samples {
      * Date formatter used to include dates in the fabricated data
      */
     // noinspection SpellCheckingInspection
-    private val dateFormatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+    private val dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
 
     /**
      * Generate a dataset of RDF strings

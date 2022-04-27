@@ -1,28 +1,13 @@
 package org.ragna.comet
 package validation.timeout
 
-import data.DataFormat
 import data.DataFormat._
 import exception.stream.timed.StreamTimeoutException
-import exception.stream.validations.{StreamErroredItemException, StreamInvalidItemException}
-import implicits.RDFElementImplicits.rdfFromString
-import schema.ShExSchemaFormat
 import schema.ShExSchemaFormat._
-import stream.extractors.StreamExtractor
-import stream.extractors.list.ListExtractor
-import trigger.ShapeMapFormat._
-import trigger.TriggerModeType.{SHAPEMAP, TARGET_DECLARATIONS}
-import trigger.{ShapeMapFormat, TriggerModeType, ValidationTrigger}
 import utils.Samples.StreamSamples.mkSingleValidationResult
-import validation.Validator
-import validation.configuration.ValidatorConfiguration
-import validation.ouputs.SchemaTests
-import validation.result.ResultStatus._
-import validation.result.ValidationResult
 
-import cats.effect.IO
 import cats.effect.testing.scalatest.AsyncIOSpec
-import es.weso.schema.Schema
+import cats.implicits.catsSyntaxEitherId
 import org.scalatest.freespec.AsyncFreeSpec
 import org.scalatest.matchers.should.Matchers
 
@@ -43,7 +28,7 @@ class TimeoutTests extends AsyncFreeSpec with AsyncIOSpec with Matchers {
     // Generate valid data, although with a minimal unsatisfiable timeout
     mkSingleValidationResult(
       rdfFormat = TURTLE,
-      schemaFormat = SHEXC,
+      schemaFormat = SHEXC.asRight,
       extractorTimeout = Some(1.micro))
       .assertThrows[StreamTimeoutException]
   }

@@ -4,7 +4,6 @@ package utils
 import cats.effect.{FiberIO, IO, Temporal}
 import com.typesafe.scalalogging.LazyLogging
 
-import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
 
 /**

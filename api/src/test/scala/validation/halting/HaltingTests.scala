@@ -1,27 +1,14 @@
 package org.ragna.comet
 package validation.halting
 
-import data.DataFormat
 import data.DataFormat._
 import exception.stream.validations.{StreamErroredItemException, StreamInvalidItemException}
-import implicits.RDFElementImplicits.rdfFromString
-import schema.ShExSchemaFormat
 import schema.ShExSchemaFormat._
-import stream.extractors.StreamExtractor
-import stream.extractors.list.ListExtractor
-import trigger.ShapeMapFormat._
-import trigger.TriggerModeType.{SHAPEMAP, TARGET_DECLARATIONS}
-import trigger.{ShapeMapFormat, TriggerModeType, ValidationTrigger}
 import utils.Samples.StreamSamples.mkSingleValidationResult
-import validation.Validator
-import validation.configuration.ValidatorConfiguration
-import validation.ouputs.SchemaTests
-import validation.result.ResultStatus._
-import validation.result.ValidationResult
 
-import cats.effect.IO
 import cats.effect.testing.scalatest.AsyncIOSpec
-import es.weso.schema.Schema
+import cats.implicits.catsSyntaxEitherId
+import org.ragna.comet.validation.ouputs.SchemaTests
 import org.scalatest.freespec.AsyncFreeSpec
 import org.scalatest.matchers.should.Matchers
 
@@ -54,7 +41,7 @@ class HaltingTests extends AsyncFreeSpec with AsyncIOSpec with Matchers {
       "using ShEx schemas" in {
         mkSingleValidationResult(
           rdfFormat = TURTLE,
-          schemaFormat = SHEXC,
+          schemaFormat = SHEXC.asRight,
           valid = false,
           haltOnInvalid = true)
           .assertThrows[StreamInvalidItemException]
@@ -63,7 +50,7 @@ class HaltingTests extends AsyncFreeSpec with AsyncIOSpec with Matchers {
       "using SHACL schemas" in {
         mkSingleValidationResult(
           rdfFormat = TURTLE,
-          schemaFormat = TURTLE,
+          schemaFormat = TURTLE.asLeft,
           valid = false,
           haltOnInvalid = true)
           .assertThrows[StreamInvalidItemException]
@@ -75,7 +62,7 @@ class HaltingTests extends AsyncFreeSpec with AsyncIOSpec with Matchers {
         mkSingleValidationResult(
           rdfItem = "This is wrong RDF data that will not validate whatsoever",
           rdfFormat = TURTLE,
-          schemaFormat = SHEXC,
+          schemaFormat = SHEXC.asRight,
           haltOnInvalid = false,
           haltOnError = true,
           None
@@ -87,7 +74,7 @@ class HaltingTests extends AsyncFreeSpec with AsyncIOSpec with Matchers {
         mkSingleValidationResult(
           rdfItem = "This is wrong RDF data that will not validate whatsoever",
           rdfFormat = TURTLE,
-          schemaFormat = TURTLE,
+          schemaFormat = TURTLE.asLeft,
           haltOnInvalid = false,
           haltOnError = true,
           None

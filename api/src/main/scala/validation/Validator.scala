@@ -2,7 +2,7 @@ package org.ragna.comet
 package validation
 
 import data.DataFormat
-import exception.stream.timed.StreamTimeoutException
+import exception.stream.timed._
 import exception.stream.validations._
 import stream.StreamSource
 import stream.extractors.StreamExtractor
@@ -13,15 +13,13 @@ import validation.configuration.ValidatorConfiguration
 import validation.result.ResultStatus._
 import validation.result.ValidationResult
 
-import cats.data.EitherT
 import cats.effect.unsafe.implicits.global
-import cats.effect.{Deferred, IO, Resource}
+import cats.effect.{IO, Resource}
 import cats.implicits._
-import cats.syntax.all._
 import com.typesafe.scalalogging.LazyLogging
 import es.weso.rdf.InferenceEngine
 import es.weso.rdf.jena.RDFAsJenaModel
-import es.weso.schema.{Schema, ShapeMapTrigger, Result => ValidationReport, ValidationTrigger => ValidationTriggerShaclex}
+import es.weso.schema.{Schema, Result => ValidationReport}
 import fs2.{Pipe, Stream}
 import org.apache.kafka.common.KafkaException
 
@@ -140,7 +138,7 @@ class Validator[A](configuration: ValidatorConfiguration,
           val validationResult: IO[ValidationReport] = for {
             // Get a builder
             builderResource <- RDFAsJenaModel.empty
-            validation: ValidationReport <- (builderResource, rdfResource)
+            validation <- (builderResource, rdfResource)
               .tupled
               .use {
                 case (builder, rdfModel) =>

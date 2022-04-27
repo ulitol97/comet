@@ -9,7 +9,6 @@ import fs2.io.file._
 import fs2.{Stream, text}
 
 import java.nio.charset.Charset
-import scala.concurrent.duration._
 
 /**
  * Utilities to work with files, in the context of FS2 Streams and using
@@ -117,9 +116,6 @@ object FileUtils extends LazyLogging {
         // Write string to file
         .through(Files[IO].writeAll(file, fileFlags))
         // "Run" this Stream and return nothing
-        .compile.drain
-      // Return the path written into
-      >> IO.pure(file)
+        .compile.drain >> IO.pure(file) // Return the path written into
   }
-
 }

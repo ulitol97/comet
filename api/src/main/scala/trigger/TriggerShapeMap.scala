@@ -1,12 +1,8 @@
 package org.ragna.comet
 package trigger
 
-import cats._
-import cats.data._
-import cats.effect._
-import cats.implicits._
 import es.weso.rdf.PrefixMap
-import es.weso.schema.{Schema, ShapeMapTrigger, TargetDeclarations, ValidationTrigger => ValidationTriggerW}
+import es.weso.schema.{ShapeMapTrigger, ValidationTrigger => ValidationTriggerW}
 import es.weso.shapemaps.ShapeMap
 
 import scala.language.postfixOps

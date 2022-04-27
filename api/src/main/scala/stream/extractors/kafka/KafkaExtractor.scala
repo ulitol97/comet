@@ -6,8 +6,7 @@ import model.rdf.RDFElement
 import stream.StreamSource
 import stream.extractors.StreamExtractor
 
-import cats.effect.{IO, Temporal}
-import cats.implicits._
+import cats.effect.IO
 import es.weso.rdf.InferenceEngine
 import fs2.Stream
 import fs2.kafka._

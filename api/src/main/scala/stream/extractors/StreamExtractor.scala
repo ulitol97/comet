@@ -8,12 +8,10 @@ import model.rdf.RDFElement
 import stream.StreamSource
 import stream.extractors.StreamExtractor.Defaults._
 import stream.extractors.StreamExtractor.Errors
-import utils.{Fs2StreamOps, Timer}
+import utils.Fs2StreamOps
 import validation.Validator.Types.RDFValidationItem
-import validation.result.ValidationResult
 
 import cats.effect._
-import cats.effect.unsafe.implicits.global
 import es.weso.rdf.jena.RDFAsJenaModel
 import es.weso.rdf.{InferenceEngine, NONE}
 import fs2.{Pipe, Stream}
