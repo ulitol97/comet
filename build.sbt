@@ -1,4 +1,4 @@
-import java.net.URL
+
 
 /* ------------------------------------------------------------------------- */
 /* BASIC PROPERTIES */
@@ -57,41 +57,17 @@ lazy val resolverSettings = Seq(
 ThisBuild / organization := "com.ragna"
 ThisBuild / homepage := Some(url("https://github.com/ulitol97"))
 ThisBuild / licenses := List("MIT" -> url("https://mit-license.org/"))
-
-//lazy val publishSettings = Seq(
-//  organization := "es.weso",
-//  sonatypeProfileName := "es.weso",
-//  maintainer := "info@weso.es",
-//  homepage := Some(url("https://github.com/weso/rdfshape-api")),
-//  licenses := Seq("MIT" -> url("https://opensource.org/licenses/MIT")),
-//  scmInfo := Some(
-//    ScmInfo(
-//      url("https://github.com/weso/rdfshape-api"),
-//      "scm:git:git@github.com:weso/rdfshape-api.git"
-//    )
-//  ),
-//  developers := List(
-//    Developer(
-//      "WESO",
-//      "WESO Research Group",
-//      "info@weso.es",
-//      new URL("https://github.com/weso")
-//    ),
-//    Developer(
-//      "labra",
-//      "Jose Emilio Labra Gayo",
-//      "labra@uniovi.es",
-//      new URL("https://labra.weso.es/")
-//    ),
-//    Developer(
-//      "ulitol",
-//      "Eduardo Ulibarri Toledo",
-//      "eduulitol@protonmail.com",
-//      new URL("https://github.com/ulitol97")
-//    )
-//  ),
-//  publishMavenStyle := true // generate POM, not ivy
-//)
+ThisBuild / developers := List(
+  Developer(
+    "ragna",
+    "Eduardo Ulibarri Toledo",
+    "eduulitol@protonmail.com",
+    url("https://github.com/ulitol97")
+  )
+)
+// Override sonatype server location (accounts created after Feb 2021)
+sonatypeCredentialHost := "s01.oss.sonatype.org"
+sonatypeRepository := "https://s01.oss.sonatype.org/service/local"
 
 /* ------------------------------------------------------------------------- */
 /* BUILD INFO */
