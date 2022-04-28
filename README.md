@@ -22,7 +22,7 @@ streams. Comet uses:
 - Todo.
     - Explain how to get the library once uploaded.
     - Cross compiled versions.
-      - Scala 2.13 and Scala 3
+      - Scala 2.13 and Scala 3.1
       - Some Scala 3 syntax is not used to provide this cross-compatibility
     - Example build.sbt adding the dependency.
 
