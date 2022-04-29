@@ -18,7 +18,7 @@ const projectName = "comet"
 const deployUrl = `https://${projectOwner}.github.io`
 const baseUrl = `/${projectName}/`
 // Scaladoc url in the website
-const scalaDocUrl = `${deployUrl}${baseUrl}api/org/ragna/comet`
+const scalaDocUrl = `${deployUrl}${baseUrl}scaladoc/org/ragna/comet`
 
 /** @type {import("@docusaurus/types").Config} */
 const config = {

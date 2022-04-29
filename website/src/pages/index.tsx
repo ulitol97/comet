@@ -14,7 +14,7 @@ function HomepageHeader({buttons}) {
         <h1 className="hero__title">{siteConfig.title}</h1>
         <p className="hero__subtitle">{siteConfig.tagline}</p>
 
-        <div className={styles.buttons}>
+        <div className={`${styles.buttons} homepage-buttons`}>
           {/* Print all buttons */}
           {buttons.map((btn, idx) => (
             <Link key={idx}

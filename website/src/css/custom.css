@@ -48,7 +48,25 @@ svg[class*="featureSvg"] {
   font-weight: bold;
 }
 
-/* Side margins */
+/* Ensure the current display (row or column) for button links in Home */
+.homepage-buttons {
+  display: flex;
+  flex-direction: row;
+}
+
+@media only screen and (max-width: 600px) {
+  .homepage-buttons {
+    flex-direction: column;
+  }
+}
+
+/* Side margins, altered on mobile screens */
 .side-margin {
   margin: auto 10px;
+}
+
+@media only screen and (max-width: 600px) {
+  .side-margin {
+    margin: 10px auto;
+  }
 }
