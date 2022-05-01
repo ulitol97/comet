@@ -220,7 +220,7 @@ lazy val unidocSettings: Seq[Def.Setting[_]] = Seq(
   // Generate docs for the API module
   ScalaUnidoc / unidoc / unidocProjectFilter := inProjects(api),
   // Dump docs into the website static part, to link them with docusaurus
-  ScalaUnidoc / unidoc / target := (LocalRootProject / baseDirectory).value / "website" / "static" / "scaladoc",
+  ScalaUnidoc / unidoc / target := (LocalRootProject / baseDirectory).value / websiteFolder / "static" / "scaladoc",
   // When cleaning, remove unidoc generated docs as well
   cleanFiles += (ScalaUnidoc / unidoc / target).value,
   // Scalac options, mirroring scaladoc settings
@@ -246,6 +246,12 @@ lazy val unidocSettings: Seq[Def.Setting[_]] = Seq(
 // The docusaurus webpage will be located in /website
 // See https://scalameta.org/mdoc/docs/docusaurus.html
 // See https://docusaurus.io/
+
+// Name of the directory inside the root folder containing the webdocs markdown
+// For changes, edit docusaurus.config.js
+lazy val docsFolder = "docs"
+// Name of the directory inside the root folder containing the Docusaurus site
+lazy val websiteFolder = "website"
 lazy val mdocSettings = Seq(
   mdocVariables := Map(
     "APP_NAME" -> (Global / name).value.capitalize,
@@ -255,6 +261,8 @@ lazy val mdocSettings = Seq(
     "CLIENT_NAME" -> "RDFShape Client",
     "CLIENT_REPO" -> "https://github.com/weso/rdfshape-client/",
     "CLIENT_URL" -> "https://rdfshape.weso.es/",
+    "WEBSITE_FOLDER" -> websiteFolder,
+    "DOCS_FOLDER" -> docsFolder,
     // Reference the Scala versions from webdocs
     "SCALA_2_VERSION" -> scalaVersionPattern.replaceAllIn(scala2_13, ".x"),
     "SCALA_3_VERSION" -> scalaVersionPattern.replaceAllIn(scala3_1, ".x"),

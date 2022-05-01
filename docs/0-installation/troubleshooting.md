@@ -19,4 +19,4 @@ resolvers ++= Seq(
     Opts.resolver.sonatypeSnapshots,
     Opts.resolver.sonatypeReleases
   )
-```🏼
+```
