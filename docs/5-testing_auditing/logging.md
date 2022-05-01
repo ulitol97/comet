@@ -3,52 +3,28 @@ id: logging
 title: Logging
 ---
 
-# Logging mechanism
+# Logging
 
-## Command Reference
+@APP_NAME@ is a library meant to be used in third-party software projects,
+thus the goal of providing a logging mechanism that does not interfere with
+@APP_INNER_NAME@'s parent project.
 
-@APP_NAME@'s CLI currently supports the following launch-arguments:
-
-- `--https` Attempt to serve the API via HTTPS (default is false), searching for
-  certificates as specified in the current environment.
-- `-p, --port`  Port in which the API will listen for requests. Values must be
-  in range 1-65535 (default is 8080).
-- `-s, --silent`  Enable silent mode in order not to log any output to console (
-  default is false)
-- `-v, --verbose` Show additional logging information (use cumulative times for
-  additional info, like: `-vvv`)
-- `--version` Print the version of the program
-- `--help` Print the help menu
-
-## Verbosity levels
-
-When using the `-v, --verbose` CLI argument, the following logging messages are
-shown on console at each time:
-
-- `No verbose argument` **ERROR** level messages
-- `-v` **WARN** level messages and upwards
-- `-vv` **INFO** level messages and upwards (includes client connections and
-  requests)
-- `-vvv` **DEBUG** level messages and upwards
-
-## JVM Custom Arguments
-
-In case @APP_NAME@ is having trouble to generate permalinks due to an SSL issue,
-try adding the following argument:
-
-- `-Djdk.tls.client.protocols=TLSv1.2`
-
-## Examples
-
-1. Launching @APP_NAME@ in port 8081:
-
-- `rdfshape -p 8081`
-
-2. Launching @APP_NAME@ in port 80, try to use the HTTPS configuration from the
-   environment:
-
-- `rdfshape -p 80 --https`
-
-3. Launching @APP_NAME@ in port 8080, with the maximum verbosity level:
-
-- `rdfshape -vvv`
+For this purpose, [scala-logging](https://github.com/lightbend/scala-logging)
+has been used for several reasons:
+1. It just provides a logging **front-end**, meaning the parent project is
+in charge of defining a logging mechanism and configuration,
+which will be honored by @APP_INNER_NAME@.
+2. It is a Scala wrapper for the [SLF4J](https://www.slf4j.org/), a mature and
+reliable Java logging framework.
+3. Provides several macros and utilities to reduce the verbosity of the code
+in charge logging messages. Take for example:
+```scala
+// 1. Extend LazyLogging
+object Main extends IOApp with LazyLogging {
+  override def run(args: List[String]): IO[ExitCode] = {
+    // 2. Log anything from anywhere in the class
+    logger.debug("Launching comet")
+    IO.pure(ExitCode.Success)
+  }
+}
+```
