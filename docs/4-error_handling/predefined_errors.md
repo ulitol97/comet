@@ -5,42 +5,40 @@ title: Pre-defined errors
 
 # Pre-defined errors
 
-## Command Reference
+@APP_NAME@ has some built-in exception types that are thrown on some common
+error that might arise during the validation flow.
 
-@APP_NAME@'s CLI currently supports the following launch-arguments:
+## Stream exceptions
 
-- `--https` Attempt to serve the API via HTTPS (default is false), searching for certificates as specified in the current environment.
-- `-p, --port`  Port in which the API will listen for requests. Values must be in range 1-65535 (default is 8080).
-- `-s, --silent`  Enable silent mode in order not to log any output to console (default is false)
-- `-v, --verbose` Show additional logging information (use cumulative times for additional info, like: `-vvv`) 
-- `--version` Print the version of the program
-- `--help` Print the help menu
+Errors occurred whilst running the validation stream:
 
-## Verbosity levels
+### Validation
 
-When using the `-v, --verbose` CLI argument, the following logging messages are shown on console at each time:
+An error occurred where a validation output does not comply with the validator's
+configuration:
 
-- `No verbose argument` **ERROR** level messages
-- `-v` **WARN** level messages and upwards
-- `-vv` **INFO** level messages and upwards (includes client connections and requests)
-- `-vvv` **DEBUG** level messages and upwards
+- [StreamInvalidItemException](https://ulitol97.github.io/comet/scaladoc/org/ragna/comet/exception/stream/validations/StreamInvalidItemException.html):
+  Thrown when an item did not validate against its validation schema and the
+  validator was configured to halt on invalid data.
+- [StreamErroredItemException](https://ulitol97.github.io/comet/scaladoc/org/ragna/comet/exception/stream/validations/StreamErroredItemException.html):
+  Thrown when the processing of an item threw an error and the validator was
+  configured to halt on errors. Contains the original error cause.
 
-## JVM Custom Arguments
+### Timed
 
-In case @APP_NAME@ is having trouble to generate permalinks due to an SSL issue, try adding the following argument:
+- [StreamTimeoutException](https://ulitol97.github.io/comet/scaladoc/org/ragna/comet/exception/stream/timed/StreamTimeoutException.html):
+  Thrown when the validation stream was not fed any data for a time period
+  longer than the extractor's configured timeout.
 
-- `-Djdk.tls.client.protocols=TLSv1.2`
+---
 
-## Examples
+All stream-related custom exceptions can be found in:
 
-1. Launching @APP_NAME@ in port 8081:
+- [org.ragna.comet.exception.stream.timed](https://ulitol97.github.io/comet/scaladoc/org/ragna/comet/exception/stream/timed.html)
+- [org.ragna.comet.exception.stream.validations](https://ulitol97.github.io/comet/scaladoc/org/ragna/comet/exception/stream/validations.html)
 
-- `rdfshape -p 8081`
+## Configuration exceptions
 
-2. Launching @APP_NAME@ in port 80, try to use the HTTPS configuration from the environment:
-
-- `rdfshape -p 80 --https`
-
-3. Launching @APP_NAME@ in port 8080, with the maximum verbosity level:
-
-- `rdfshape -vvv`
+- [IllegalArgumentException](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/IllegalArgumentException.html):
+  Thrown when the validators/extractors are configured
+  with invalid parameters.
