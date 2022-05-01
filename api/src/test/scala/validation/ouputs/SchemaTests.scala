@@ -31,7 +31,7 @@ import org.scalatest.matchers.should.Matchers
  *       since we should be able to trust SHaclEX as a validation library
  *
  *       Still,
- *       it is unstable and its better to double check the SHaclEX validator in
+ *       it is unstable, and it's better to double-check the SHaclEX validator in
  *       our streaming context
  */
 //noinspection RedundantDefaultArgument
