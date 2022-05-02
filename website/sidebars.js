@@ -29,7 +29,7 @@ const sidebars = {
       items: ["installation/instructions", "installation/troubleshooting"],
       collapsed: false
     },
-    
+
     /* Getting started */
     {
       type: "doc", id: "getting_started/example", label: "Getting started"
@@ -43,11 +43,11 @@ const sidebars = {
       collapsed: false
     },
 
-    /* Category: Extractor model */
+    /* Category: Extractors */
     {
       type: "category",
-      label: "Extractor model",
-      items: ["extractor_model/predefined_extractors", "extractor_model/custom_extractors"],
+      label: "Extractors",
+      items: ["extractor_model/extractor", "extractor_model/predefined_extractors", "extractor_model/custom_extractors"],
       collapsed: false
     },
 

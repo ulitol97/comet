@@ -47,5 +47,4 @@ default value that makes sense for most cases.
 
 - **Purpose**: Define the maximum number of items than the validator can
   validate in parallel.
-- **Default value**:
-  See _[ValidatorConfiguration$$Defaults](https://ulitol97.github.io/comet/scaladoc/org/ragna/comet/validation/configuration/ValidatorConfiguration$$Defaults$.html)_
+- **Default value**: `10`

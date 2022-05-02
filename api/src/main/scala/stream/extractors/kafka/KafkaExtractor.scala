@@ -70,13 +70,14 @@ case class KafkaExtractor[K, V]
    * incoming elements
    *
    */
-  override private[extractors] lazy val inputStream: Stream[IO, V] = KafkaConsumer.stream(consumerSettings)
-    .subscribeTo(configuration.topic)
-    .records
-    .mapAsync(configuration.concurrentItems) { committable =>
-      // Merely extract the record value
-      IO.pure(committable.record.value)
-    }
+  override private[extractors] lazy val inputStream: Stream[IO, V] =
+    KafkaConsumer.stream(consumerSettings)
+      .subscribeTo(configuration.topic)
+      .records
+      .mapAsync(configuration.concurrentItems) { committable =>
+        // Merely extract the record value
+        IO.pure(committable.record.value)
+      }
 
   // Override source
   override val source: StreamSource = StreamSource.Kafka

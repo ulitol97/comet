@@ -14,15 +14,11 @@ title: Unit tests
 
 You may run the tests by running `sbt test` or simply `test` from the SBT shell.
 
-## Scope
-
-The provided tests broadly cover the following areas:
-
-### Validation tests
+## Validation tests
 
 Test the working of the validators in different scenarios.
 
-#### Results
+### Results
 
 - Goals:
   - Ensure that the underlying RDF validation mechanism works when using either
@@ -36,7 +32,7 @@ Test the working of the validators in different scenarios.
   3. All combinations are used to perform validations, testing that the
      validation output is correct
 
-#### Halting
+### Halting
 
 - Goals:
   - Ensure that @APP_NAME@'s validation stream halts when configured to do so
@@ -48,7 +44,7 @@ Test the working of the validators in different scenarios.
   3. The data is validated against the schemas, checking that the correct error
        is thrown for each situation.
 
-#### Timeout
+### Timeout
 
 - Goals:
   - Ensure that @APP_NAME@'s validation stream forcibly halts according to its
@@ -58,7 +54,7 @@ Test the working of the validators in different scenarios.
   1. A trivial validator is run with an unfeasible timeout
   2. Check that a timeout error is thrown when the validator is initiated
 
-### Extractor tests
+## Extractor tests
 
 - Goals:
   - Test that the pre-configured extractors work as intended, regardless of the
