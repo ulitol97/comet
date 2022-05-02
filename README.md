@@ -17,33 +17,6 @@ streams. Comet uses:
   against both [ShEx](https://shex.io/)
   and [SHACL](https://www.w3.org/TR/shacl/)
 
-## Downloading and installing
-
-- Todo.
-    - Explain how to get the library once uploaded.
-    - Cross compiled versions.
-      - Scala 2.13 and Scala 3.1
-      - Some Scala 3 syntax is not used to provide this cross-compatibility
-    - Example build.sbt adding the dependency.
-
 ## Getting started
 
-- Todo.
-    - Introduce a little example in a commented main method.
-
-## Developer info
-
-For those who are willing to build, modify or contribute, the project uses _sbt_
-, as well as:
-
-- Java 17 (LTS)
-- [Scala 3](https://docs.scala-lang.org/scala3/new-in-scala3.html)
-- Cats Effect 3
-
-## Pending explanations
-
-- Todo. Refer to wiki/microsite for:
-    - Usage examples
-    - Validator model.
-    - Extractor model (extensible!).
-    - etc.
+Refer to the [project's microsite](https://ulitol97.github.io/comet/) to get install and usage instructions.
