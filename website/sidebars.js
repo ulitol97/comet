@@ -39,7 +39,7 @@ const sidebars = {
     {
       type: "category",
       label: "Validators",
-      items: ["validators/validator", "validators/validator_config"],
+      items: ["validators/validator", "validators/validator_config", "validators/validator_results"],
       collapsed: false
     },
 

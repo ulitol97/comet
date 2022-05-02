@@ -5,42 +5,47 @@ title: Validator configuration
 
 # Validator configuration
 
-## Command Reference
+@APP_NAME@ validators need some manual configuration in order to work.
 
-@APP_NAME@'s CLI currently supports the following launch-arguments:
+## Parameters
 
-- `--https` Attempt to serve the API via HTTPS (default is false), searching for certificates as specified in the current environment.
-- `-p, --port`  Port in which the API will listen for requests. Values must be in range 1-65535 (default is 8080).
-- `-s, --silent`  Enable silent mode in order not to log any output to console (default is false)
-- `-v, --verbose` Show additional logging information (use cumulative times for additional info, like: `-vvv`) 
-- `--version` Print the version of the program
-- `--help` Print the help menu
+The following parameters must be passed down to create a _
+ValidatorConfiguration_ instance:
 
-## Verbosity levels
+### Mandatory parameters
 
-When using the `-v, --verbose` CLI argument, the following logging messages are shown on console at each time:
+#### Schema
 
-- `No verbose argument` **ERROR** level messages
-- `-v` **WARN** level messages and upwards
-- `-vv` **INFO** level messages and upwards (includes client connections and requests)
-- `-vvv` **DEBUG** level messages and upwards
+SHaclEX Schema against which the validation will be performed for all items processed by
+this validator
 
-## JVM Custom Arguments
+#### Trigger
 
-In case @APP_NAME@ is having trouble to generate permalinks due to an SSL issue, try adding the following argument:
+SHaclEX ValidationTrigger against which the validation will be performed for all items
+processed by this validator
 
-- `-Djdk.tls.client.protocols=TLSv1.2`
+### Optional parameters
 
-## Examples
+Some parameters needn't be specified by the user because they already have a
+default value that makes sense for most cases.
 
-1. Launching @APP_NAME@ in port 8081:
+#### Halt on Invalid
 
-- `rdfshape -p 8081`
+- **Purpose**:  Whether if the validator should halt and raise an error when
+  some RDF data is invalid or just emit an `INVALID` validation result and keep
+  on processing.
+- **Default value**: `false`
 
-2. Launching @APP_NAME@ in port 80, try to use the HTTPS configuration from the environment:
+#### Halt on Errored
 
-- `rdfshape -p 80 --https`
+- **Purpose**:  Whether if the validator should halt and raise an error when an
+  unexpected error occurs or just emit an `ERRORED` validation result and keep
+  on processing.
+- **Default value**: `false`
 
-3. Launching @APP_NAME@ in port 8080, with the maximum verbosity level:
+#### Concurrent Items
 
-- `rdfshape -vvv`
+- **Purpose**: Define the maximum number of items than the validator can
+  validate in parallel.
+- **Default value**:
+  See _[ValidatorConfiguration$$Defaults](https://ulitol97.github.io/comet/scaladoc/org/ragna/comet/validation/configuration/ValidatorConfiguration$$Defaults$.html)_
