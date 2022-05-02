@@ -13,16 +13,16 @@ title: Instructions
 To use @APP_NAME@ in [sbt](https://www.scala-sbt.org/),
 simply add the following to your `build.sbt` file:
 
-```scala
+```scala title="Adding @APP_NAME@ (version-agnostic)"
 libraryDependencies += "io.github.ulitol97" %% "comet" % "@APP_VERSION@"
 ```
 
 The library version that matches your Scala version will be selected
 automatically, but you may override it using one of these instead:
-```scala
+```scala title="Adding @APP_NAME@ (Scala @SCALA_2_VERSION@)"
 libraryDependencies += "io.github.ulitol97" % "comet_2.13" % "@APP_VERSION@
 ```
-```scala
+```scala title="Adding @APP_NAME@ (Scala @SCALA_3_VERSION@)"
 libraryDependencies += "io.github.ulitol97" % "comet_3" % "@APP_VERSION@"
 ```
 

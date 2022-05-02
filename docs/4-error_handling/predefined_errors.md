@@ -24,18 +24,15 @@ configuration:
   Thrown when the processing of an item threw an error and the validator was
   configured to halt on errors. Contains the original error cause.
 
+> See [org.ragna.comet.exception.stream.validations](https://ulitol97.github.io/comet/scaladoc/org/ragna/comet/exception/stream/validations.html)
+
 ### Timed
 
 - [StreamTimeoutException](https://ulitol97.github.io/comet/scaladoc/org/ragna/comet/exception/stream/timed/StreamTimeoutException.html):
   Thrown when the validation stream was not fed any data for a time period
   longer than the extractor's configured timeout.
 
----
-
-All stream-related custom exceptions can be found in:
-
-- [org.ragna.comet.exception.stream.timed](https://ulitol97.github.io/comet/scaladoc/org/ragna/comet/exception/stream/timed.html)
-- [org.ragna.comet.exception.stream.validations](https://ulitol97.github.io/comet/scaladoc/org/ragna/comet/exception/stream/validations.html)
+> See [org.ragna.comet.exception.stream.timed](https://ulitol97.github.io/comet/scaladoc/org/ragna/comet/exception/stream/timed.html)
 
 ## Configuration exceptions
 

@@ -16,9 +16,9 @@ following [GitHub action](https://github.com/ulitol97/comet/blob/main/.github/wo
 
 The website contents are located:
 
-1. <u>Inside the _[@WEBSITE_FOLDER@](https://github.com/ulitol97/comet/tree/master/@WEBSITE_FOLDER@) folder</u>:_ Docusaurus
+1. Inside the _[@WEBSITE_FOLDER@](https://github.com/ulitol97/comet/tree/master/@WEBSITE_FOLDER@) folder:_ Docusaurus
    configuration files, React pages, header/footer/sidebar contents, etc.
-2. <u>Inside the _[@DOCS_FOLDER@](https://github.com/ulitol97/comet/tree/master/@DOCS_FOLDER@) folder</u>:_ Markdown files, first
+2. Inside the _[@DOCS_FOLDER@](https://github.com/ulitol97/comet/tree/master/@DOCS_FOLDER@) folder:_ Markdown files, first
    processed by [mdoc](https://scalameta.org/mdoc/) and eventually by Docusaurus to create
    the [Web Docs](@WEBPAGE_URL@docs/).
 
