@@ -10,7 +10,7 @@ title: Unit tests
 - [scalatest](https://www.scalatest.org/): an extensible, widely adopted scala
   testing framework.
 - [cats-effect-testing](https://github.com/typelevel/cats-effect-testing):
-  Typelevel's compatibility layer between cats-effect and tests frameworks
+  Typelevel's compatibility layer between cats-effect and tests frameworks.
 
 You may run the tests by running `sbt test` or simply `test` from the SBT shell.
 
@@ -30,17 +30,17 @@ Test the working of the validators in different scenarios.
   1. RDF data is generated in all accepted formats.
   2. Validation schemas are generated in all accepted engines and formats.
   3. All combinations are used to perform validations, testing that the
-     validation output is correct
+     validation output is correct.
 
 ### Halting
 
 - Goals:
   - Ensure that @APP_NAME@'s validation stream halts when configured to do so
-    for either invalid or erroring validations
+    for either invalid or erroring validations.
 
 - Modus operandi: 
-  1. Well formatted and badly formatted RDF data is generated
-  2. Validation schemas that won't validate the data are generated
+  1. Well formatted and badly formatted RDF data is generated.
+  2. Validation schemas that won't validate the data are generated.
   3. The data is validated against the schemas, checking that the correct error
        is thrown for each situation.
 
@@ -51,8 +51,8 @@ Test the working of the validators in different scenarios.
     extractor timeout when no items are received after some time
 
 - Modus operandi:
-  1. A trivial validator is run with an unfeasible timeout
-  2. Check that a timeout error is thrown when the validator is initiated
+  1. A trivial validator is run with an unfeasible timeout.
+  2. Check that a timeout error is thrown when the validator is initiated.
 
 ## Extractor tests
 
@@ -62,5 +62,5 @@ Test the working of the validators in different scenarios.
 
 - Modus operandi:
   1. Some trivial but valid RDF/Schema combinations are produced and then
-    consumed by a validator, but each time the validator will be fed through a
+    consumed by a validator. Each time, the validator will be fed through a
     different extractor to make sure all extractors work the same.

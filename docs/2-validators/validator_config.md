@@ -17,12 +17,12 @@ ValidatorConfiguration_ instance:
 #### Schema
 
 SHaclEX Schema against which the validation will be performed for all items processed by
-this validator
+this validator.
 
 #### Trigger
 
 SHaclEX ValidationTrigger against which the validation will be performed for all items
-processed by this validator
+processed by this validator.
 
 ### Optional parameters
 

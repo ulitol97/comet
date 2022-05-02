@@ -6,7 +6,7 @@ title: Pre-defined errors
 # Pre-defined errors
 
 @APP_NAME@ has some built-in exception types that are thrown on some common
-error that might arise during the validation flow.
+errors that might arise during the validation flow.
 
 ## Stream exceptions
 
@@ -24,15 +24,11 @@ configuration:
   Thrown when the processing of an item threw an error and the validator was
   configured to halt on errors. Contains the original error cause.
 
-> See [org.ragna.comet.exception.stream.validations](https://ulitol97.github.io/comet/scaladoc/org/ragna/comet/exception/stream/validations.html)
-
 ### Timed
 
 - [StreamTimeoutException](https://ulitol97.github.io/comet/scaladoc/org/ragna/comet/exception/stream/timed/StreamTimeoutException.html):
   Thrown when the validation stream was not fed any data for a time period
   longer than the extractor's configured timeout.
-
-> See [org.ragna.comet.exception.stream.timed](https://ulitol97.github.io/comet/scaladoc/org/ragna/comet/exception/stream/timed.html)
 
 ## Configuration exceptions
 

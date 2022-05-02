@@ -8,10 +8,10 @@ title: Getting started
 The following is an example showing how to use @APP_NAME@ with:
 
 - A **List Extractor**, containing a list of RDF strings from which to form a
-  stream of RDF
+  stream of RDF data.
 - A **Validator**, configured with a _Schema_ and a _ValidationTrigger_ to
-  produce a stream of validation results
-- A set of code blocks evaluating the stream items:
+  produce a stream of validation results.
+- A set of code blocks evaluating the final stream items:
   - <u>EvalMap</u>: Print the items at the end of the processing pipeline
   - <u>Error handling</u>: Define error-recovering behaviour
 
@@ -62,7 +62,7 @@ object Main extends IOApp.Simple {
 
       // 4. Start the validation stream
       app <- validator.validate // Init
-        .evalTap(IO.println) // Print each item
+        .evalMap(IO.println) // Print each item
         .handleErrorWith { error => // Handle each error
           Stream.eval(
             error match {
