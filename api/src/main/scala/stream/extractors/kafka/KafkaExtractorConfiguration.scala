@@ -79,6 +79,10 @@ sealed case class KafkaExtractorConfiguration
    * @throws IllegalArgumentException On invalid configuration parameters
    */
   private[kafka] def testConfiguration(): Unit = {
+    // Check non-empty string fields
+    require(isNonEmptyString(server), invalidServer(server.some))
+    require(isNonEmptyString(topic), invalidTopic(topic.some))
+    require(isNonEmptyString(groupId), invalidGroupId(groupId.some))
     // Check valid port
     require(isValidPort(port), invalidPort(port.some))
     // Check valid timings
@@ -119,6 +123,11 @@ object KafkaExtractorConfiguration {
      * @see https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml
      */
     def isValidPort(input: Int): Boolean = input > 1 && input <= 65535
+
+    /**
+     * Given a certain string, confirm if it is non-empty
+     */
+    def isNonEmptyString(input: String): Boolean = !input.isBlank
 
     /**
      * Given a certain duration, confirm it complies with this configuration's
@@ -276,5 +285,26 @@ object KafkaExtractorConfiguration {
      *         being supplied
      */
     def invalidPort(port: Option[Int]): String = mkError("port", port)
+
+    /**
+     * @param server Invalid server host supplied
+     * @return An error message due to an invalid server having 
+     *         being supplied
+     */
+    def invalidServer(server: Option[String]): String = mkError("server", server)
+
+    /**
+     * @param topic Invalid topic supplied
+     * @return An error message due to an invalid topic having 
+     *         being supplied
+     */
+    def invalidTopic(topic: Option[String]): String = mkError("topic", topic)
+
+    /**
+     * @param groupId Invalid group ID supplied
+     * @return An error message due to an invalid consumer group identifier having 
+     *         being supplied
+     */
+    def invalidGroupId(groupId: Option[String]): String = mkError("groupId", groupId)    
   }
 }
