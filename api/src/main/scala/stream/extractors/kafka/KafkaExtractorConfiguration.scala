@@ -152,7 +152,7 @@ object KafkaExtractorConfiguration {
    * Default values used in the configuration as fallbacks when no
    * alternative has been received
    */
-  private[kafka] object Defaults {
+  object Defaults {
 
     /**
      * Default server from which to receive streaming data

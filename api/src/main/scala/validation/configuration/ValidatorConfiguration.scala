@@ -62,7 +62,7 @@ object ValidatorConfiguration {
    * Default values used as fallbacks when no
    * alternative has been received
    */
-  private[configuration] object Defaults {
+  object Defaults {
     /**
      * Default amount of items that can be validated concurrently
      */

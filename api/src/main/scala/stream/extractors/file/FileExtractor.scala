@@ -64,7 +64,7 @@ case class FileExtractor
 
 object FileExtractor {
 
-  private[file] object Defaults {
+  object Defaults {
     /**
      * Default charset expected for files
      */
