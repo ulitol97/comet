@@ -1,17 +1,16 @@
 package org.ragna.comet
 package validation.result
 
-import validation.result.ResultStatus
 import validation.result.ResultStatus._
-import validation.result.ValidationResult._
 import validation.result.ValidationResult.Messages._
+import validation.result.ValidationResult._
 
 import cats.effect.IO
 import cats.effect.unsafe.implicits.global
 import cats.syntax.all._
 import es.weso.rdf.jena.RDFAsJenaModel
 import es.weso.schema.{Result => ValidationReport}
-import io.circe.Json
+import io.circe.{Encoder, Json}
 
 /**
  * Represents the output of validating a piece of streamed data
@@ -65,6 +64,19 @@ case class ValidationResult(private val inputResult: Either[Throwable, Validatio
 }
 
 object ValidationResult {
+
+  /**
+   * Encoder: [[ValidationResult]] => JSON
+   * Encode the given validation result as a JSON object
+   */
+  implicit val encoder: Encoder[ValidationResult] = (validationResult: ValidationResult) =>
+    Json.fromFields(List(
+      ("valid", Json.fromBoolean(validationResult.status.valid)),
+      ("status", Json.fromString(validationResult.status.textValue)),
+      ("message", Json.fromString(validationResult.message)),
+      // Inject a false here if the report is unavailable (errored results)
+      ("report", validationResult.result.map(getValidationReportJson).getOrElse(Json.fromBoolean(false)))
+    ))
 
   /**
    * From a ShaclEx validation report, create a message with its contents if
