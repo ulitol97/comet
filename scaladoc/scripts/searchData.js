@@ -155,7 +155,9 @@ pages = [{"l":"index.html","n":"comet-api-docs","t":"comet-api-docs","d":"","k":
 {"l":"org/ragna/comet/validation/configuration/ValidatorConfiguration$$Defaults$.html","n":"defaultHaltOnErrored","t":"val defaultHaltOnErrored: Boolean","d":"org/ragna/comet/validation/configuration/ValidatorConfiguration$$Defaults$","k":"val"},
 {"l":"org/ragna/comet/validation/configuration/ValidatorConfiguration$$Defaults$.html","n":"defaultHaltOnInvalid","t":"val defaultHaltOnInvalid: Boolean","d":"org/ragna/comet/validation/configuration/ValidatorConfiguration$$Defaults$","k":"val"},
 {"l":"org/ragna/comet/validation/result.html","n":"org.ragna.comet.validation.result","t":"package org.ragna.comet.validation.result","d":"org/ragna/comet/validation/result","k":"package"},
-{"l":"org/ragna/comet/validation/result/ResultStatus.html","n":"ResultStatus","t":"class ResultStatus()","d":"org/ragna/comet/validation/result/ResultStatus","k":"class"},
+{"l":"org/ragna/comet/validation/result/ResultStatus.html","n":"ResultStatus","t":"class ResultStatus(val textValue: String, val valid: Boolean)","d":"org/ragna/comet/validation/result/ResultStatus","k":"class"},
+{"l":"org/ragna/comet/validation/result/ResultStatus.html","n":"textValue","t":"val textValue: String","d":"org/ragna/comet/validation/result/ResultStatus","k":"val"},
+{"l":"org/ragna/comet/validation/result/ResultStatus.html","n":"valid","t":"val valid: Boolean","d":"org/ragna/comet/validation/result/ResultStatus","k":"val"},
 {"l":"org/ragna/comet/validation/result/ResultStatus$.html","n":"ResultStatus","t":"object ResultStatus","d":"org/ragna/comet/validation/result/ResultStatus$","k":"object"},
 {"l":"org/ragna/comet/validation/result/ResultStatus$.html","n":"fromValidationReport","t":"def fromValidationReport(report: Option[Result]): ResultStatus","d":"org/ragna/comet/validation/result/ResultStatus$","k":"def"},
 {"l":"org/ragna/comet/validation/result/ResultStatus$$ERRORED$.html","n":"ERRORED","t":"object ERRORED extends ResultStatus","d":"org/ragna/comet/validation/result/ResultStatus$$ERRORED$","k":"object"},
@@ -166,4 +168,5 @@ pages = [{"l":"index.html","n":"comet-api-docs","t":"comet-api-docs","d":"","k":
 {"l":"org/ragna/comet/validation/result/ValidationResult.html","n":"result","t":"val result: Option[Result]","d":"org/ragna/comet/validation/result/ValidationResult","k":"val"},
 {"l":"org/ragna/comet/validation/result/ValidationResult.html","n":"status","t":"val status: ResultStatus","d":"org/ragna/comet/validation/result/ValidationResult","k":"val"},
 {"l":"org/ragna/comet/validation/result/ValidationResult$.html","n":"ValidationResult","t":"object ValidationResult","d":"org/ragna/comet/validation/result/ValidationResult$","k":"object"},
+{"l":"org/ragna/comet/validation/result/ValidationResult$.html","n":"encoder","t":"val encoder: Encoder[ValidationResult]","d":"org/ragna/comet/validation/result/ValidationResult$","k":"val"},
 {"l":"docs/index.html","n":"comet-api-docs","t":"comet-api-docs","d":"","k":"static"}];
