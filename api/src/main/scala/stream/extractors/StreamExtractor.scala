@@ -134,7 +134,7 @@ abstract class StreamExtractor[A](val format: DataFormat,
   }
 }
 
-private[stream] object StreamExtractor {
+object StreamExtractor {
 
   /**
    * Default values used as fallbacks when no
