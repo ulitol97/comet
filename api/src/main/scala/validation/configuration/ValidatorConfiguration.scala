@@ -39,8 +39,8 @@ import es.weso.schema.Schema
 sealed case class ValidatorConfiguration(
                                           schema: Schema,
                                           trigger: ValidationTrigger,
-                                          haltOnInvalid: Boolean = false,
-                                          haltOnErrored: Boolean = false,
+                                          haltOnInvalid: Boolean = defaultHaltOnInvalid,
+                                          haltOnErrored: Boolean = defaultHaltOnErrored,
                                           concurrentItems: Int = defaultConcurrentValidations
                                         ) {
   // Ensure user inputs are valid
@@ -63,6 +63,17 @@ object ValidatorConfiguration {
    * alternative has been received
    */
   object Defaults {
+
+    /**
+     * Default behaviour regarding stopping the validation on invalid items
+     */
+    val defaultHaltOnInvalid = false
+
+    /**
+     * Default behaviour regarding stopping the validation on erroring items
+     */
+    val defaultHaltOnErrored = false
+
     /**
      * Default amount of items that can be validated concurrently
      */
@@ -75,17 +86,17 @@ object ValidatorConfiguration {
   private[configuration] object Errors {
 
     /**
+     * Message thrown when the input concurrency is invalid
+     */
+    val invalidConcurrentItems: String =
+      mkConfigurationCreationError(Some("Concurrent items must be > 0"))
+
+    /**
      * Text preceding any error message raised during the creation of the
      * configuration
      */
     private val configurationCreationErrorPrefix: String =
       "Could not create validator configuration from the supplied data"
-
-    /**
-     * Message thrown when the input concurrency is invalid
-     */
-    val invalidConcurrentItems: String =
-      mkConfigurationCreationError(Some("Concurrent items must be > 0"))
 
     /**
      * Method for creating descriptive error messages for errors that arose 
