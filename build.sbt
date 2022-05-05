@@ -296,7 +296,7 @@ lazy val shexsVersion = "0.2.2"
 lazy val umlShaclexVersion = "0.0.82"
 lazy val wesoUtilsVersion = "0.2.4"
 // Testing dependencies
-lazy val scalaTestVersion = "3.2.11" // Usual testing
+lazy val scalaTestVersion = "3.2.12" // Usual testing
 lazy val catsEffectTestingVersion = "1.4.0" // Integration of ScalaTest with cats-effect
 // Other
 lazy val scalaLoggingVersion = "3.9.4"
