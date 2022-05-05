@@ -10,7 +10,10 @@ import cats.effect.unsafe.implicits.global
 import cats.syntax.all._
 import es.weso.rdf.jena.RDFAsJenaModel
 import es.weso.schema.{Result => ValidationReport}
+import io.circe.syntax.EncoderOps
 import io.circe.{Encoder, Json}
+
+import java.time.Instant
 
 /**
  * Represents the output of validating a piece of streamed data
@@ -19,6 +22,11 @@ import io.circe.{Encoder, Json}
  *                    whilst computing them
  */
 case class ValidationResult(private val inputResult: Either[Throwable, ValidationReport]) {
+
+  /**
+   * Store the moment in which this result was generated
+   */
+  val emission: Instant = Instant.now()
 
   /**
    * Final status of the validation
@@ -59,6 +67,7 @@ case class ValidationResult(private val inputResult: Either[Throwable, Validatio
        |Validation result:
        |- STATUS: $status
        |- MESSAGE: $message
+       |- DATE: $emission
        |- REPORT: ${result.map(getValidationReportJson).map(_.spaces2).getOrElse(noReportMessage)}
        |""".stripMargin.strip()
 }
@@ -74,6 +83,7 @@ object ValidationResult {
       ("valid", Json.fromBoolean(validationResult.status.valid)),
       ("status", Json.fromString(validationResult.status.textValue)),
       ("message", Json.fromString(validationResult.message)),
+      ("instant", validationResult.emission.asJson),
       // Inject a false here if the report is unavailable (errored results)
       ("report", validationResult.result.map(getValidationReportJson).getOrElse(Json.fromBoolean(false)))
     ))
