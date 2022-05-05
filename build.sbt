@@ -264,11 +264,6 @@ lazy val mdocSettings = Seq(
     // Reference the Scala versions from webdocs
     "SCALA_2_VERSION" -> scalaVersionPattern.replaceAllIn(scala2_13, ".x"),
     "SCALA_3_VERSION" -> scalaVersionPattern.replaceAllIn(scala3_1, ".x"),
-
-    "API_URL" -> "https://api.rdfshape.weso.es",
-    "API_CONTAINER_REGISTRY" -> "https://github.com/orgs/weso/packages/container/package/rdfshape-api",
-    "WESOLOCAL_URL" -> "https://github.com/weso/wesolocal/wiki/RDFShape",
-    "API-DOCS_URL" -> "https://app.swaggerhub.com/apis-docs/weso/RDFShape"
   ),
   // No warnings reported for dead links
   mdocExtraArguments := Seq("--no-link-hygiene"),
