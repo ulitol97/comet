@@ -169,4 +169,5 @@ pages = [{"l":"index.html","n":"comet-api-docs","t":"comet-api-docs","d":"","k":
 {"l":"org/ragna/comet/validation/result/ValidationResult.html","n":"status","t":"val status: ResultStatus","d":"org/ragna/comet/validation/result/ValidationResult","k":"val"},
 {"l":"org/ragna/comet/validation/result/ValidationResult$.html","n":"ValidationResult","t":"object ValidationResult","d":"org/ragna/comet/validation/result/ValidationResult$","k":"object"},
 {"l":"org/ragna/comet/validation/result/ValidationResult$.html","n":"encoder","t":"val encoder: Encoder[ValidationResult]","d":"org/ragna/comet/validation/result/ValidationResult$","k":"val"},
+{"l":"org/ragna/comet/validation/result/ValidationResult$.html","n":"getValidationReportJson","t":"def getValidationReportJson(report: Result): Json","d":"org/ragna/comet/validation/result/ValidationResult$","k":"def"},
 {"l":"docs/index.html","n":"comet-api-docs","t":"comet-api-docs","d":"","k":"static"}];
