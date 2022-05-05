@@ -85,7 +85,7 @@ object ValidationResult {
    * @param report Report to be formatted to text
    * @return JSON containing the [[report]] information
    */
-  private def getValidationReportJson(report: ValidationReport): Json = {
+  def getValidationReportJson(report: ValidationReport): Json = {
     // Convert ValidationResult to JSON
     val validationResultJson: IO[Json] = for {
       emptyResource <- RDFAsJenaModel.empty
